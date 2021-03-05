@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Auth;
 use App\User;
+use Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -30,7 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    // protected $redirectTo = '/User';
+    protected $redirectTo = '/User';
 
     /**
      * Create a new controller instance.
@@ -51,26 +52,70 @@ class LoginController extends Controller
             'password' => 'required' // password can only be alphanumeric and has to be greater than 3 characters
         ]);
 
-        // create our user data for the authentication
-        // $userdata = array(
-        //     'userName'     => $request->userName,
-        //     'password'  => $request->password
-        // );
-        // echo "<pre>"; print_r($userdata);die;
-        // attempt to do the login
-        $user = User::where([
-            'userName' => $request->userName, 
-            'password' => $request->password
-        ])->first();
+        $userName = intval(trim($request->userName,'"'));
+        $password = intval(trim($request->password,'"'));
 
-        if ($user) {
 
-            
+        if($userName != "" && $password != ""){
+            $user = User::where([
+                'userName' => $userName,
+                'password' => $password
+            ])->first();
 
-        } else {        
-
-            return redirect('/');
-
+            if ($user) {
+                $users = User::where('userName',$userName)
+                ->first();
+                // echo "<pre>";
+                // print_r($users['role']);
+                // die();
+                if(!empty($users)){
+                    if($users['role'] == 'Admin'){
+                        Session::put('username', $users['userName']);
+                        Session::put('name', $users['name']);
+                        Session::put('creditPoint', $users['creditPoint']);
+                        Session::put('role', $users['role']);
+                        Session::put('id', $users['id']);
+                            return redirect()->intended('/dashboard');
+                    }elseif($users['role']=="superDistributer"){
+                        Session::put('username', $users['userName']);
+                        Session::put('name', $users['name']);
+                        Session::put('creditPoint', $users['creditPoint']);
+                        Session::put('role', $users['role']);
+                        Session::put('id', $users['id']);
+                            return redirect()->intended('/dashboard');
+                    }elseif($users['role']=="distributer"){
+                        Session::put('username', $users['userName']);
+                        Session::put('name', $users['name']);
+                        Session::put('creditPoint', $users['creditPoint']);
+                        Session::put('role', $users['role']);
+                        Session::put('id', $users['id']);
+                            return redirect()->intended('/dashboard');
+                    }elseif($users['role']=="retailer"){
+                        Session::put('username', $users['username']);
+                        Session::put('name', $users['name']);
+                        Session::put('creditPoint', $users['creditPoint']);
+                        Session::put('role', $users['role']);
+                        Session::put('id', $users['id']);
+                            return redirect()->intended('/dashboard');
+                    }else{
+                        Session::flush();
+                        return redirect()->route('login');
+                    }
+                }
+            } else {        
+                return redirect()->route('login');
+            }
+        }else{
+            return redirect()->route('login');
         }
+        
     }
+
+    public function doLogout()
+    {
+        Auth::logout(); // log the user out of our application
+        Session::flush(); //
+        return Redirect::to('login'); // redirect the user to the login screen
+    }
+
 }

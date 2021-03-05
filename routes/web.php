@@ -13,13 +13,44 @@
 
 Auth::routes();
 
-Route::get('/User', 'demoController@index');
+// Route::get('/User', 'demoController@index');
 
 Route::get('/', function () {
     return view('auth.login');
 });
 
 Route::post('/login_custom','Auth\LoginController@Login_custom');
+
+Route::group(['middleware' => 'auth'],function () {
+    Route::get('/logout', 'Auth\LoginController@logout');
+    Route::get('/dashboard', function () { return view('dashboard'); });
+    
+    Route::group(['middleware' => 'admin'],function () {
+        Route::resources([
+            'admin' => 'AdminController',  
+        ]);
+        Route::post('/get_data','AdminController@get_data');
+        Route::post('/get_distributer','AdminController@get_distributer');
+    });
+
+    Route::group(['middleware' => 'superdistributer'],function(){
+        Route::resources([
+            'superdistributer' => 'superdistributerController',  
+        ]);
+    });
+
+    Route::group(['middleware' => 'distributer'],function(){
+        Route::resources([
+            'distributer' => 'DistributerController',  
+        ]);
+    });
+
+    Route::group(['middleware' => 'retailer'],function(){
+        Route::resources([
+            'retailer' => 'retailerController',  
+        ]);
+    });
+});
 
 // Route::group(['prefix' => 'email'], function(){
 //     Route::get('inbox', function () { return view('pages.email.inbox'); });

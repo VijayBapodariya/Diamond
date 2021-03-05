@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Session;
 
 class Retailer
 {
@@ -15,6 +16,16 @@ class Retailer
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        if(Session::has('username') && Session::get('role')=="Admin"){
+            return redirect('/admin');
+        }elseif(Session::has('username') && Session::get('role')=="superdistributer"){
+            return redirect('/superdistributer');
+        }elseif(Session::has('username') && Session::get('role')=="distributer"){
+            return redirect('/distributer');
+        }elseif(Session::has('username') && Session::get('role')=="retailer"){
+            return $next($request);
+        }else{
+            return redirect()->route('login');
+        }
     }
 }

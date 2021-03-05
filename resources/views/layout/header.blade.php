@@ -3,7 +3,7 @@
     <i data-feather="menu"></i>
   </a>
   <div class="navbar-content">
-    <form class="search-form">
+    {{-- <form class="search-form">
       <div class="input-group">
         <div class="input-group-prepend">
           <div class="input-group-text">
@@ -12,9 +12,9 @@
         </div>
         <input type="text" class="form-control" id="navbarForm" placeholder="Search here...">
       </div>
-    </form>
+    </form> --}}
     <ul class="navbar-nav">
-      <li class="nav-item dropdown">
+      {{-- <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="flag-icon flag-icon-us mt-1" title="us"></i> <span class="font-weight-medium ml-1 mr-1">English</span>
         </a>
@@ -123,72 +123,23 @@
             <a href="javascript:;">View all</a>
           </div>
         </div>
+      </li> --}}
+      <li class="nav-item dropdown nav-notifications">
+        <a class="nav-link dropdown-toggle m-2" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-users mr-1"></i>Blocked Players
+        </a>
       </li>
       <li class="nav-item dropdown nav-notifications">
-        <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i data-feather="bell"></i>
-          <div class="indicator">
-            <div class="circle"></div>
-          </div>
+        <a class="nav-link dropdown-toggle m-2" href="{{url('/chpass')}}" id="notificationDropdown">
+          <i class="fa fa-key mr-1"></i>Change Password
         </a>
-        <div class="dropdown-menu" aria-labelledby="notificationDropdown">
-          <div class="dropdown-header d-flex align-items-center justify-content-between">
-            <p class="mb-0 font-weight-medium">6 New Notifications</p>
-            <a href="javascript:;" class="text-muted">Clear all</a>
-          </div>
-          <div class="dropdown-body">
-            <a href="javascript:;" class="dropdown-item">
-              <div class="icon">
-                <i data-feather="user-plus"></i>
-              </div>
-              <div class="content">
-                <p>New customer registered</p>
-                <p class="sub-text text-muted">2 sec ago</p>
-              </div>
-            </a>
-            <a href="javascript:;" class="dropdown-item">
-              <div class="icon">
-                <i data-feather="gift"></i>
-              </div>
-              <div class="content">
-                <p>New Order Recieved</p>
-                <p class="sub-text text-muted">30 min ago</p>
-              </div>
-            </a>
-            <a href="javascript:;" class="dropdown-item">
-              <div class="icon">
-                <i data-feather="alert-circle"></i>
-              </div>
-              <div class="content">
-                <p>Server Limit Reached!</p>
-                <p class="sub-text text-muted">1 hrs ago</p>
-              </div>
-            </a>
-            <a href="javascript:;" class="dropdown-item">
-              <div class="icon">
-                <i data-feather="layers"></i>
-              </div>
-              <div class="content">
-                <p>Apps are ready for update</p>
-                <p class="sub-text text-muted">5 hrs ago</p>
-              </div>
-            </a>
-            <a href="javascript:;" class="dropdown-item">
-              <div class="icon">
-                <i data-feather="download"></i>
-              </div>
-              <div class="content">
-                <p>Download completed</p>
-                <p class="sub-text text-muted">6 hrs ago</p>
-              </div>
-            </a>
-          </div>
-          <div class="dropdown-footer d-flex align-items-center justify-content-center">
-            <a href="javascript:;">View all</a>
-          </div>
-        </div>
+      </li> 
+      <li class="nav-item dropdown nav-notifications">
+        <a class="nav-link dropdown-toggle m-2" href="{{url('/logout')}}" id="notificationDropdown">
+          <i class="fa fa-sign-out mr-1"></i>Logout
+        </a>
       </li>
-      <li class="nav-item dropdown nav-profile">
+      {{-- <li class="nav-item dropdown nav-profile">
         <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img src="{{ url('https://via.placeholder.com/30x30') }}" alt="profile">
         </a>
@@ -231,7 +182,7 @@
             </ul>
           </div>
         </div>
-      </li>
+      </li> --}}
     </ul>
   </div>
 </nav>
