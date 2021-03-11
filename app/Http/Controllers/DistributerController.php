@@ -1,11 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\User;
 use Illuminate\Http\Request;
 
 class DistributerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('CheckAuth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +17,18 @@ class DistributerController extends Controller
      */
     public function index()
     {
-        //
+
+        // done/ Use new \MongoDB\BSON\ObjectID this for search with Object Id
+        //ok
+        
+        // $distributers = User::where('referralId',new \MongoDB\BSON\ObjectID('603388bb7d20e50a81217277'))->get();
+        // $distributer = User::where('isLogin',false)->get();
+        // // echo "<pre>";print_r($distributer->toArray());
+        // echo "<pre>";print_r($distributers->toArray());die;
+        $user = User::where('role', 'distributer')->orderBy('createdAt','DESC')
+                ->get();
+        $users = User::all();
+        return view('superdistributer.index',['data' => $user,'users'=>$users]);
     }
 
     /**

@@ -21,35 +21,62 @@ Route::get('/', function () {
 
 Route::post('/login_custom','Auth\LoginController@Login_custom');
 
-Route::group(['middleware' => 'auth'],function () {
+Route::group(['middleware' => 'CheckAuth'],function () {
     Route::get('/logout', 'Auth\LoginController@logout');
     Route::get('/dashboard', function () { return view('dashboard'); });
     
     Route::group(['middleware' => 'admin'],function () {
         Route::resources([
-            'admin' => 'AdminController',  
+            'admin' => 'AdminController',
         ]);
+        Route::get('/detail/{id}','AdminController@detail');
+        Route::get('/admin/delete/{id}','AdminController@destroy');
+        Route::get('/superdistributer','SuperDistributerController@index');
+        Route::get('/distributer','DistributerController@index');
+        Route::get('/retailer','ReatilerController@index');
+        Route::get('/admin/detail/{id}','AdminController@detail');
         Route::post('/get_data','AdminController@get_data');
         Route::post('/get_distributer','AdminController@get_distributer');
+        Route::get('admin/delete/{id}','AdminController@destroy');
+        Route::get('/winhistory','CommanController@winhistory');
+        Route::post('/winhistorys','CommanController@winhistorys');
+        
     });
 
     Route::group(['middleware' => 'superdistributer'],function(){
-        Route::resources([
-            'superdistributer' => 'superdistributerController',  
-        ]);
+        // Route::resources([
+        //     'superdistributer' => 'superdistributerController',  
+        // ]);
     });
 
     Route::group(['middleware' => 'distributer'],function(){
-        Route::resources([
-            'distributer' => 'DistributerController',  
-        ]);
+        // Route::resources([
+        //     'distributer' => 'DistributerController',  
+        // ]);
     });
 
     Route::group(['middleware' => 'retailer'],function(){
-        Route::resources([
-            'retailer' => 'retailerController',  
-        ]);
+        // Route::resources([
+        //     'retailer' => 'retailerController',  
+        // ]);
     });
+
+    Route::get('/OnPlayers','CommanController@OnPlayers');
+    
+    Route::get('/history','CommanController@history');
+
+    Route::get('/Tnover/{type}/{from}/{to}','TnOvercontroller@index');
+
+    Route::get('transfercredit/{id}','AdminController@transfercredit');
+        Route::post('transfercredits/{id}','AdminController@transfercredits');
+    Route::get('adjustcredit/{id}','AdminController@adjustcredit');
+        Route::post('adjustcredit/{id}','AdminController@adjustcrEdits');
+    Route::get('banuser/{id}/{isActive}','AdminController@banuser');
+    Route::get('/transfer','AdminController@transfer');
+        Route::post('/search','AdminController@search');
+        Route::post('/search_transfer','AdminController@search_transfer');
+    Route::get('/success/{id}','AdminController@success');
+    Route::get('/reject/{id}','AdminController@reject');
 });
 
 // Route::group(['prefix' => 'email'], function(){

@@ -19,13 +19,13 @@ class Distributer
         if(Session::has('username') && Session::get('role')=="Admin"){
             return redirect('/admin');
         }elseif(Session::has('username') && Session::get('role')=="superdistributer"){
-            return $next($request);
+            return redirect('/superdistributer');
         }elseif(Session::has('username') && Session::get('role')=="distributer"){
             return $next($request);
         }elseif(Session::has('username') && Session::get('role')=="retailer"){
             return redirect('/retailer');
         }else{
-            return redirect()->route('login');
+            return redirect('/login');
         }
     }
 }

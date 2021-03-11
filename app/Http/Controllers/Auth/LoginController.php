@@ -75,6 +75,8 @@ class LoginController extends Controller
                         Session::put('creditPoint', $users['creditPoint']);
                         Session::put('role', $users['role']);
                         Session::put('id', $users['id']);
+                        Session::put('transactionPin',$users['transactionPin']);
+                        Session::put('permissions',$users['permissions']);
                             return redirect()->intended('/dashboard');
                     }elseif($users['role']=="superDistributer"){
                         Session::put('username', $users['userName']);
@@ -82,6 +84,8 @@ class LoginController extends Controller
                         Session::put('creditPoint', $users['creditPoint']);
                         Session::put('role', $users['role']);
                         Session::put('id', $users['id']);
+                        Session::put('transactionPin',$users['transactionPin']);
+                        Session::put('permissions',$users['permissions']);
                             return redirect()->intended('/dashboard');
                     }elseif($users['role']=="distributer"){
                         Session::put('username', $users['userName']);
@@ -89,13 +93,17 @@ class LoginController extends Controller
                         Session::put('creditPoint', $users['creditPoint']);
                         Session::put('role', $users['role']);
                         Session::put('id', $users['id']);
+                        Session::put('transactionPin',$users['transactionPin']);
+                        Session::put('permissions',$users['permissions']);
                             return redirect()->intended('/dashboard');
                     }elseif($users['role']=="retailer"){
-                        Session::put('username', $users['username']);
+                        Session::put('username', $users['userName']);
                         Session::put('name', $users['name']);
                         Session::put('creditPoint', $users['creditPoint']);
                         Session::put('role', $users['role']);
                         Session::put('id', $users['id']);
+                        Session::put('transactionPin',$users['transactionPin']);
+                        Session::put('permissions',$users['permissions']);
                             return redirect()->intended('/dashboard');
                     }else{
                         Session::flush();

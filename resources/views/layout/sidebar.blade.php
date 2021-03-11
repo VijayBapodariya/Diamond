@@ -33,10 +33,11 @@
       <li class="nav-item {{ active_class(['/']) }}">
         <a href="{{ url('/dashboard') }}" class="nav-link">
           <i class="link-icon" data-feather="box"></i>
-          <span class="link-title">Dashboard</span>s
+          <span class="link-title">Dashboard</span>
         </a>
       </li> --}}
       <li class="nav-item nav-category">Palyers</li>
+      @if(Session::get('role')=="Admin")
         <li class="nav-item {{ active_class(['admin/create']) }}">
           <a href="{{ url('/admin/create') }}" class="nav-link">
             <i class="link-icon" data-feather="user-plus"></i>
@@ -46,15 +47,16 @@
         <li class="nav-item {{ active_class(['admin/']) }}">
           <a href="{{ url('/admin') }}" class="nav-link">
             <i class="link-icon" data-feather="user"></i>
-            <span class="link-title">View User</span>
+            <span class="link-title">View User</span> 
           </a>
         </li>
-        <li class="nav-item {{ active_class(['superDistributer/']) }}">
-          <a href="{{ url('/superDistributer') }}" class="nav-link">
+        <li class="nav-item {{ active_class(['superdistributer/']) }}">
+          <a href="{{ url('/superdistributer') }}" class="nav-link">
             <i class="link-icon" data-feather="user"></i>
             <span class="link-title">SuperDistributer</span>
           </a>
         </li>
+      @endif
       <li class="nav-item {{ active_class(['distributer/']) }}">
         <a href="{{ url('/distributer') }}" class="nav-link">
           <i class="link-icon" data-feather="user"></i>
@@ -67,12 +69,12 @@
             <span class="link-title">Retailer</span>
           </a>
         </li>
-        <li class="nav-item {{ active_class(['players/']) }}">
+        {{-- <li class="nav-item {{ active_class(['players/']) }}">
           <a href="{{ url('/players') }}" class="nav-link">
             <i class="link-icon" data-feather="users"></i>
             <span class="link-title">Players</span>
           </a>
-        </li>
+        </li> --}}
       <li class="nav-item {{ active_class(['transfer/']) }}">
         <a href="{{ url('/transfer') }}" class="nav-link">
           <i class="link-icon fa fa-exchange"></i>
@@ -98,7 +100,7 @@
         </a>
       </li>
       <li class="nav-item {{ active_class(['Tnover/']) }}">
-        <a href="{{ url('/Tnover') }}" class="nav-link">
+        <a href="{{ url('/Tnover/7/'.date('Y-m-d').'/'.date('Y-m-d')) }}" class="nav-link">
           <i class="link-icon fa fa-pie-chart"></i>
           <span class="link-title">Turnover Report</span>
         </a>

@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class ReatilerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('CheckAuth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +18,10 @@ class ReatilerController extends Controller
      */
     public function index()
     {
-        //
+        $user = User::where('role', 'retailer')->orderBy('createdAt','DESC')
+            ->get();
+        $users = User::all();
+        return view('retailer.index',['data' => $user,'users'=>$users]);
     }
 
     /**

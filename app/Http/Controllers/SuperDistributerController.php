@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 
 class SuperDistributerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('CheckAuth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +18,10 @@ class SuperDistributerController extends Controller
      */
     public function index()
     {
-        //
+        $user = User::where('role', 'superDistributer')->orderBy('createdAt','DESC')
+            ->get();
+        $users = User::all();
+        return view('superdistributer.index',['data' => $user,'users'=>$users]);
     }
 
     /**

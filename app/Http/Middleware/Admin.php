@@ -19,14 +19,13 @@ class Admin
         if(Session::has('username') && Session::get('role')=="Admin"){
             return $next($request);
         }elseif(Session::has('username') && Session::get('role')=="superdistributer"){
-            return redirect('superdistributer');
+            return redirect('/superdistributer');
         }elseif(Session::has('username') && Session::get('role')=="distributer"){
-            return redirect('distributer');
+            return redirect('/distributer');
         }elseif(Session::has('username') && Session::get('role')=="retailer"){
-            return redirect('retailer');
+            return redirect('/retailer');
         }else{
-            return redirect('login');
+            return redirect('/login');
         }
-       
     }
 }
