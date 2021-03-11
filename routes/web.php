@@ -66,6 +66,15 @@ Route::group(['middleware' => 'CheckAuth'],function () {
     Route::get('/history','CommanController@history');
 
     Route::get('/Tnover/{type}/{from}/{to}','TnOvercontroller@index');
+    Route::get('/transactions','CommanController@transactions');
+
+    Route::get('/cmbreport','CommanController@cmbreport');
+
+    Route::get('/chpass','AdminController@chpass');
+        Route::post('/chpassword','AdminController@chpassword');
+
+    Route::get('/changepin','AdminController@changepin');
+        Route::post('/chpin','AdminController@chpin');
 
     Route::get('transfercredit/{id}','AdminController@transfercredit');
         Route::post('transfercredits/{id}','AdminController@transfercredits');

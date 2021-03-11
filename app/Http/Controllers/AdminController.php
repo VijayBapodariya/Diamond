@@ -217,6 +217,83 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
+    public function chpass()
+    {
+        return view('changepassword');
+    }
+
+    public function chpassword(Request $request)
+    {
+        $validatedData = $request->validate([
+            'opass' => 'required|numeric|min:6',
+            'npass' => 'required|numeric|min:6',
+            'cpass' => 'required|numeric|min:6'
+        ]);
+
+        $password = intval(trim($request->cpass,'"'));
+        $user = User::find(Session::get('id'));
+        if($user['password']==$request->opass){
+            if($request->opass != $request->npass){
+                if($request->npass == $request->cpass)
+                {
+                    $user->password = $password;
+                    $user->save();
+                    Session::flush();
+                    return redirect('/');
+                }else{
+                    return back()->with('msg','new pass not match....');
+                }
+            }else{
+               return back()->with('msg','old pass and new pass match....');
+            }
+        }else{
+            return back()->with('msg','old pass not match....');
+        }
+        
+    }
+
+    public function changepin()
+    {
+        return view('transactionpin');
+    }
+
+    public function chpin(Request $request)
+    {
+        // echo "<pre>";
+        // print_r($request->toArray());
+        // die;
+        $validatedData = $request->validate([
+            'password' => 'required|numeric|min:6',
+            'otpass' => 'required|numeric|min:6',
+            'ntpass' => 'required|numeric|min:6',
+            'ctpass' => 'required|numeric|min:6'
+        ]);
+        $password = intval(trim($request->ctpass,'"'));
+        $user = User::find(Session::get('id'));
+
+        if($user['transactionPin']==$request->otpass){
+            if($request->otpass != $request->ntpass){
+                if($request->ntpass == $request->ctpass)  
+                {
+                    // $token = Session::get('token');
+                    if($user['password']==$request->password){
+                            $user->transactionPin = $password;
+                            $user->save();
+                            return back()->with('success','Transaction Pin Updated.....');
+                    }else{
+                        return back()->with('error','password is not match');
+                    }
+                }else{
+                    return back()->with('error','new pass not match....');
+                }
+            }else{
+                return back()->with('error','old pass and new pass match....');
+            }
+        }else{
+            return back()->with('msg','old transactionPin pass not match....');
+        }
+    }
+
     public function banuser($id, $isActive)
     {
         // echo "<pre>";
@@ -527,4 +604,6 @@ class AdminController extends Controller
         session()->flash('msg', 'reject creditpoint successfully....');
         return redirect()->back();
     }
+
+    
 }

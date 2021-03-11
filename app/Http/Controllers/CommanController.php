@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Bets;
+use App\Payments;
 use App\Winresults;
 use Session;
 use Carbon\Carbon;
@@ -107,5 +108,26 @@ class CommanController extends Controller
                                 )->paginate(10);
         // echo "<pre>";print_r($win->toArray());die;
         return view('winhistory',['win'=>$win]);
+    }
+
+    public function transactions()
+    {
+        $users = User::all();
+        $user = User::where('_id',Session::get('id'))->get();
+        $payment = Payments::where('fromId',Session::get('id'))->orderBy('createdAt','DESC')->get();
+        foreach($payment as $key => $pay){
+            $users = User::where('_id',new \MongoDB\BSON\ObjectID($pay['toId']))->first();
+            // echo "<pre>";print_r($users);die();
+            // $payment[$key]['createdAt'] = Carbon::parse( $pay['createdAt'] )->toDayDateTimeString();
+            $payment[$key]['userName']=$users['userName'];
+        }
+        // echo "<pre>";print_r($payment->toArray());die;
+        return view('transaction',['data'=>$users,'payment'=>$payment,'user'=>$user]);
+    }
+
+    public function cmbreport()
+    {
+        
+        return view('commissionPayout');
     }
 }
