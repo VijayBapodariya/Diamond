@@ -70,6 +70,12 @@ Route::group(['middleware' => 'CheckAuth'],function () {
 
     Route::get('/cmbreport','CommanController@cmbreport');
 
+    Route::get('/winningPercent','AdminController@winningPercent');
+        Route::post('/percent','AdminController@percent');
+
+    Route::get('/Winbyadmin','AdminController@Winbyadmin');
+        Route::post('/percent','AdminController@percent');
+
     Route::get('/chpass','AdminController@chpass');
         Route::post('/chpassword','AdminController@chpassword');
 

@@ -8,6 +8,8 @@ use Session;
 use App\Payments;
 use App\User;
 use App\Winresults;
+use App\Winnings;
+use App\WinnerIds;
 
 class AdminController extends Controller
 {
@@ -217,6 +219,50 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
+    public function winningPercent()
+    {
+        $this->middleware('admin');
+
+        // echo $t=strtotime("5:20:00 am")."<br>";
+        // echo date("h:i a",time())."<br>";
+        // echo $b=time()."<br>";
+        // if($t < $b){
+        //     echo "nay thay";
+        // }else{
+        //     echo "thay";
+        // }
+        echo $myTime = strtotime("11:00:00 am")."<br>";
+        echo $time = time()."<br>";
+        if($myTime > $time){
+            echo "nay thay";
+        }else{
+            echo "thay";
+        }
+        die();
+        $user = Winnings::find('602e55e9a494988def7acc25');
+        return view('admin.winningPercent',['data'=>$user]);
+    }
+
+    public function percent(Request $request)
+    {
+        $this->middleware('admin');
+        $request->validate([
+            'percent' => 'required|not_in:0|numeric|between:0,99.99',
+        ]);
+        $user = Winnings::find('602e55e9a494988def7acc25');
+        $user->percent = $request->percent;
+        $user->save();
+        session()->flash('success', 'winning percentage is updated');
+        return view('admin.winningPercent', ['data' => $user]);
+    }
+
+    public function Winbyadmin()
+    {
+        $this->middleware('admin');
+        $user = User::where('role','retailer')->get();
+        return view('admin.WinnerId',['data'=>$user]);
+    }
+
     public function chpass()
     {
         return view('changepassword');
@@ -268,6 +314,7 @@ class AdminController extends Controller
             'ntpass' => 'required|numeric|min:6',
             'ctpass' => 'required|numeric|min:6'
         ]);
+        $pass = intval(trim($request->password,'"'));
         $password = intval(trim($request->ctpass,'"'));
         $user = User::find(Session::get('id'));
 
@@ -276,10 +323,10 @@ class AdminController extends Controller
                 if($request->ntpass == $request->ctpass)  
                 {
                     // $token = Session::get('token');
-                    if($user['password']==$request->password){
-                            $user->transactionPin = $password;
-                            $user->save();
-                            return back()->with('success','Transaction Pin Updated.....');
+                    if($user['password']==$pass){
+                        $user->transactionPin = $password;
+                        $user->save();
+                        return back()->with('success','Transaction Pin Updated.....');
                     }else{
                         return back()->with('error','password is not match');
                     }
