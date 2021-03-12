@@ -132,7 +132,7 @@
       <li class="nav-item {{ active_class(['Winbyadmin/']) }}">
         <a href="{{ url('/Winbyadmin') }}" class="nav-link">
           <i class="link-icon fa fa-trophy"></i>
-          <span class="link-title">Winning By Admin</span>
+          <span class="link-title">Retailer By Admin</span>
         </a>
       </li>
       <li class="nav-item {{ active_class(['announcement/']) }}">

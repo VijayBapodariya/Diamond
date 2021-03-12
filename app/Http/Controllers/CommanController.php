@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Bets;
 use App\Payments;
+use App\Announcements;
 use App\Winresults;
 use Session;
 use Carbon\Carbon;
@@ -127,7 +128,32 @@ class CommanController extends Controller
 
     public function cmbreport()
     {
-        
+
         return view('commissionPayout');
+    }
+
+    public function announcement()
+    {
+        $announcement = Announcements::find(new \MongoDB\BSON\ObjectID('6039ea5b9ee94d505a90dd3e'));
+        return view('announcement', ['data' => $announcement]);
+    }
+
+    public function announcements(Request $request)
+    {
+        $announcement = Announcements::find(new \MongoDB\BSON\ObjectID('6039ea5b9ee94d505a90dd3e'));
+        $announcement->announcement = $request->amount;
+        $announcement->save();
+        return redirect('announcement/');
+    }
+
+    public function blockedPlayers()
+    {
+        $users = User::where('isActive',false)->get();
+        foreach($users as $key => $user){
+            $reffrel = User::where('_id',new \MongoDB\BSON\ObjectID($user['referralId']))->first();
+            $users[$key]['referral']=$reffrel['userName'];
+        }
+        // echo "<pre>";print_r($users->toArray());die();
+        return view('/blockedPlayers',['data' => $users]);
     }
 }

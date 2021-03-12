@@ -163,36 +163,48 @@
                 </div>
                 <div class="form-check form-check-flat form-check-primary">
                   <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" name="permission[]"  value="users">
-                    users
+                    <input type="checkbox" class="form-check-input" name="permission[]"  value="superdistributer">
+                    Superdistributer
                   </label>
                 </div>
-              </div>
-              <div class="col-sm-3">
                 <div class="form-check form-check-flat form-check-primary">
                   <label class="form-check-label">
                     <input type="checkbox" class="form-check-input" name="permission[]"  value="distributer">
                     Distributer
                   </label>
                 </div>
-                {{-- <div class="form-check form-check-flat form-check-primary">
+              </div>
+              <div class="col-sm-3">
+                <div class="form-check form-check-flat form-check-primary">
                   <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" name="permission[]"  value="full_permission">
-                    Full_Permission
+                    <input type="checkbox" class="form-check-input" name="permission[]"  value="retailer">
+                    Retailer
                   </label>
                 </div>
                 <div class="form-check form-check-flat form-check-primary">
                   <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" name="permission[]"  value="full_permission">
-                    Full_Permission
+                    <input type="checkbox" class="form-check-input" name="permission[]"  value="winningPercent">
+                    WinningPercent
                   </label>
                 </div>
                 <div class="form-check form-check-flat form-check-primary">
                   <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" name="permission[]"  value="full_permission">
-                    Full_Permission
+                    <input type="checkbox" class="form-check-input" name="permission[]"  value="winbyadmin">
+                    Winbyadmin
                   </label>
-                </div> --}}
+                </div>
+                <div class="form-check form-check-flat form-check-primary">
+                  <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" name="permission[]"  value="announcement">
+                    Announcement
+                  </label>
+                </div>
+                <div class="form-check form-check-flat form-check-primary">
+                  <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" name="permission[]"  value="complaint">
+                    Complaint
+                  </label>
+                </div>
               </div>
           </div>
           <div class="form-group d-flex">

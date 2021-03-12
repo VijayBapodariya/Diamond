@@ -18,7 +18,7 @@
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h6 class="card-title">Data Table</h6>
+        <h6 class="card-title">Blocked Players</h6>
         {{-- <p class="card-description">Read the <a href="https://datatables.net/" target="_blank"> Official DataTables Documentation </a>for a full list of instructions and other options.</p> --}}
         <div class="table-responsive">
           <table id="dataTableExample" class="table table-bordered">
@@ -27,8 +27,9 @@
                 <th>Sl_no</th>
                 <th>Username</th>
                 <th>Name</th>
+                <th>Refferal</th>
                 <th>Credit</th>
-                <th>Action</th>
+                <th>CreatedAt</th>
               </tr>
             </thead>
             <tbody>
@@ -36,32 +37,16 @@
                     $sl_no = 1;
                 @endphp
               @foreach($data as $value)
-              @if(Session::get('role')=="Admin")
-                @if($value['role'] == 'Admin')
+                @if($value['role'] != 'Admin')
                   <tr role="row" class="odd">
                       <td class=""><?= $sl_no++; ?></td>
-                      <td><a href="{{ url('admin/detail/'.$value['_id']) }}">{{$value['userName']}}<i class="mdi mdi-eye"></i></a></td>
+                      <td>{{$value['userName']}}</td>
                       <td>{{$value['name']}}</td>
+                      <td>{{$value['referral']}}</td>
                       <td>{{number_format($value['creditPoint'],2)}}</td>
-                      <td>
-                            <div class="btn-group">
-                                <a href="{{ url('admin/'.$value['_id'].'/edit')}}" type="button" class="btn btn-outline-info" title="Edit user"><i class="mdi mdi-pencil-box" style="font-size:20px;"></i></a>
-                                <a href="{{ url('transfercredit/'.$value['_id']) }}" class="btn btn-outline-success" title="Transfer Credit"><i class="mdi mdi-package-up" style="font-size:20px;"></i></a>
-                                <a href="{{ url('adjustcredit/'.$value['_id'])}}" class="btn btn-outline-warning" title="Adjust Credit"><i class="mdi mdi-package-down" style="font-size:20px;"></i></a>
-                                @if($value['isActive']==1)
-                                  <a href="{{ url('admin/banuser/'.$value['_id'].'/'.$value['isActive'])}}" class="btn btn-outline-success" title="Ban User"><i class="mdi mdi-close-box" style="font-size:20px;"></i></a>
-                                @elseif($value['isActive']==0)
-                                  <a href="{{ url('admin/banuser/'.$value['_id'].'/0')}}" class="btn btn-outline-danger" title="UnBan User"><i class="mdi mdi-checkbox-marked" style="font-size:20px;"></i></a>
-                                @endif
-                                @if(Session::get('role')=='Admin')
-                                  <a href="{{ url('admin/delete/'.$value['_id'])}}" class="btn btn-outline-danger delete-confirm" title="delete"><i class="mdi mdi-delete" style="font-size:20px;"></i></a>
-                                @endif
-                            </div>
-                            {{-- href="{{ url('users/delete/'.$value['_id'])}}" --}}
-                      </td> 
+                      <td>{{\Carbon\Carbon::parse($value['contentcreatedAt'])->format('d-m-Y h:i:s A') }}</td>
                   </tr>
                 @endif
-              @endif 
               @endforeach
                 {{-- <tr role="row" class="odd">
                     <td class="">1306</td>

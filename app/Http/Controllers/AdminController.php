@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-
-use Illuminate\Http\Request;
-use Session;
 use App\Payments;
 use App\User;
-use App\Winresults;
 use App\Winnings;
 use App\WinnerIds;
+use App\Complaints;
+use App\WinnerIdHistoris;
+use Illuminate\Http\Request;
+use Session;
 
 class AdminController extends Controller
 {
@@ -25,7 +25,7 @@ class AdminController extends Controller
     public function index()
     {
         $this->middleware('admin');
-        $user = User::where('role', 'Admin')->orderBy('createdAt','DESC')->get();
+        $user = User::where('role', 'Admin')->orderBy('createdAt', 'DESC')->get();
         return view('admin.view', ['data' => $user]);
     }
 
@@ -222,45 +222,82 @@ class AdminController extends Controller
     public function winningPercent()
     {
         $this->middleware('admin');
-
-        // echo $t=strtotime("5:20:00 am")."<br>";
-        // echo date("h:i a",time())."<br>";
-        // echo $b=time()."<br>";
-        // if($t < $b){
-        //     echo "nay thay";
-        // }else{
-        //     echo "thay";
-        // }
-        echo $myTime = strtotime("11:00:00 am")."<br>";
-        echo $time = time()."<br>";
-        if($myTime > $time){
-            echo "nay thay";
-        }else{
-            echo "thay";
-        }
-        die();
         $user = Winnings::find('602e55e9a494988def7acc25');
-        return view('admin.winningPercent',['data'=>$user]);
+        return view('admin.winningPercent', ['data' => $user]);
     }
 
     public function percent(Request $request)
     {
         $this->middleware('admin');
-        $request->validate([
-            'percent' => 'required|not_in:0|numeric|between:0,99.99',
-        ]);
-        $user = Winnings::find('602e55e9a494988def7acc25');
-        $user->percent = $request->percent;
-        $user->save();
-        session()->flash('success', 'winning percentage is updated');
+        date_default_timezone_set("Asia/Calcutta");
+        $startTime = date('H:i',strtotime("9:00:00 pm")) . "<br>";
+        $endTime = date('H:i',strtotime("7:00:00 am")) . "<br>";
+        $time = date('H:i',time()) . "<br>";
+        if ($startTime < $time && $time < $endTime) {
+            $request->validate([
+                'percent' => 'required|not_in:0|numeric|between:0,99.99',
+            ]);
+            $user = Winnings::find('602e55e9a494988def7acc25');
+            $user->percent = $request->percent;
+            $user->save();
+            session()->flash('success', 'winning percentage is updated');
+        } else {
+            session()->flash('success', 'Your');
+        }
+        
         return view('admin.winningPercent', ['data' => $user]);
     }
 
     public function Winbyadmin()
     {
         $this->middleware('admin');
-        $user = User::where('role','retailer')->get();
-        return view('admin.WinnerId',['data'=>$user]);
+        $user = User::where('role', 'retailer')->get();
+        $winner = WinnerIds::all();
+        foreach($winner as $key => $pay){
+            $users = User::where('_id',new \MongoDB\BSON\ObjectID($pay['retailerId']))->first();
+            // $payment[$key]['createdAt'] = Carbon::parse( $pay['createdAt'] )->toDayDateTimeString();
+            $winner[$key]['userName']=$users['userName'];
+        }
+        // echo "<pre>";print_r($winner->toArray());die();
+        return view('admin.WinnerId', ['data' => $user,'winner'=>$winner]);
+    }
+
+    public function winnerIdAdmin(Request $request)
+    {
+        // echo "<pre>";print_r($request->toArray());die();
+        $this->middleware('admin');
+        $request->validate([
+            'amount' => 'required',
+            'percent' => 'required|not_in:0|numeric|between:0,99.99'
+        ]);
+        $user = new WinnerIds();
+        $user->retailerId = new \MongoDB\BSON\ObjectID($request->amount);
+        $user->percent = $request->percent;
+        $user->save();
+        $win = new WinnerIdHistoris();
+        $win->retailerId = new \MongoDB\BSON\ObjectID($request->amount);
+        $win->percent = $request->percent;
+        $win->save();
+        session()->flash('success', 'retailer percentage is added');
+        return redirect('Winbyadmin');
+    }
+
+    public function complaint()
+    {
+        $Complaints = Complaints::all();
+        foreach($Complaints as $key => $pay){
+            $users = User::where('_id',new \MongoDB\BSON\ObjectID($pay['retailerId']))->first();
+            // $payment[$key]['createdAt'] = Carbon::parse( $pay['createdAt'] )->toDayDateTimeString();
+            $Complaints[$key]['userName']=$users['userName'];
+        }
+        return view('/complaint',['data'=>$Complaints]);
+    }
+
+    public function complaintDelete($id)
+    {
+        $Complaint = Complaints::find($id);
+        $Complaint->delete();
+        return redirect('/complaint');
     }
 
     public function chpass()
@@ -273,29 +310,28 @@ class AdminController extends Controller
         $validatedData = $request->validate([
             'opass' => 'required|numeric|min:6',
             'npass' => 'required|numeric|min:6',
-            'cpass' => 'required|numeric|min:6'
+            'cpass' => 'required|numeric|min:6',
         ]);
 
-        $password = intval(trim($request->cpass,'"'));
+        $password = intval(trim($request->cpass, '"'));
         $user = User::find(Session::get('id'));
-        if($user['password']==$request->opass){
-            if($request->opass != $request->npass){
-                if($request->npass == $request->cpass)
-                {
+        if ($user['password'] == $request->opass) {
+            if ($request->opass != $request->npass) {
+                if ($request->npass == $request->cpass) {
                     $user->password = $password;
                     $user->save();
                     Session::flush();
                     return redirect('/');
-                }else{
-                    return back()->with('msg','new pass not match....');
+                } else {
+                    return back()->with('msg', 'new pass not match....');
                 }
-            }else{
-               return back()->with('msg','old pass and new pass match....');
+            } else {
+                return back()->with('msg', 'old pass and new pass match....');
             }
-        }else{
-            return back()->with('msg','old pass not match....');
+        } else {
+            return back()->with('msg', 'old pass not match....');
         }
-        
+
     }
 
     public function changepin()
@@ -312,32 +348,31 @@ class AdminController extends Controller
             'password' => 'required|numeric|min:6',
             'otpass' => 'required|numeric|min:6',
             'ntpass' => 'required|numeric|min:6',
-            'ctpass' => 'required|numeric|min:6'
+            'ctpass' => 'required|numeric|min:6',
         ]);
-        $pass = intval(trim($request->password,'"'));
-        $password = intval(trim($request->ctpass,'"'));
+        $pass = intval(trim($request->password, '"'));
+        $password = intval(trim($request->ctpass, '"'));
         $user = User::find(Session::get('id'));
 
-        if($user['transactionPin']==$request->otpass){
-            if($request->otpass != $request->ntpass){
-                if($request->ntpass == $request->ctpass)  
-                {
+        if ($user['transactionPin'] == $request->otpass) {
+            if ($request->otpass != $request->ntpass) {
+                if ($request->ntpass == $request->ctpass) {
                     // $token = Session::get('token');
-                    if($user['password']==$pass){
+                    if ($user['password'] == $pass) {
                         $user->transactionPin = $password;
                         $user->save();
-                        return back()->with('success','Transaction Pin Updated.....');
-                    }else{
-                        return back()->with('error','password is not match');
+                        return back()->with('success', 'Transaction Pin Updated.....');
+                    } else {
+                        return back()->with('error', 'password is not match');
                     }
-                }else{
-                    return back()->with('error','new pass not match....');
+                } else {
+                    return back()->with('error', 'new pass not match....');
                 }
-            }else{
-                return back()->with('error','old pass and new pass match....');
+            } else {
+                return back()->with('error', 'old pass and new pass match....');
             }
-        }else{
-            return back()->with('msg','old transactionPin pass not match....');
+        } else {
+            return back()->with('msg', 'old transactionPin pass not match....');
         }
     }
 
@@ -564,12 +599,12 @@ class AdminController extends Controller
     public function transfer()
     {
         $user = User::orderBy('userName', 'ASC')->get();
-        $pending_accept = Payments::where('toId',Session::get('id'))->where('status','pending')->orderBy('createdAt','DESC')->get();
-        $pending_transfer = Payments::where('fromId',Session::get('id'))->orderBy('createdAt','DESC')->get();
+        $pending_accept = Payments::where('toId', Session::get('id'))->where('status', 'pending')->orderBy('createdAt', 'DESC')->get();
+        $pending_transfer = Payments::where('fromId', Session::get('id'))->orderBy('createdAt', 'DESC')->get();
         // echo "<pre>";
         // print_r($pending_transfer->toArray());
         // die();
-        return view('transfer', ['data' => $user,'pending_accept' => $pending_accept,'pending_transfer' => $pending_transfer]);
+        return view('transfer', ['data' => $user, 'pending_accept' => $pending_accept, 'pending_transfer' => $pending_transfer]);
     }
 
     public function search(Request $request)
@@ -623,7 +658,7 @@ class AdminController extends Controller
     {
         $payment = Payments::find($id);
         $payment->status = "success";
-        if($payment->save()){
+        if ($payment->save()) {
             $user = User::find($payment->toId);
             $user->creditPoint = $user->creditPoint + $payment->creditPoint;
             // echo "<pre>";
@@ -640,7 +675,7 @@ class AdminController extends Controller
     {
         $payment = Payments::find($id);
         $payment->status = "reject";
-        if($payment->save()){
+        if ($payment->save()) {
             $user = User::find($payment->fromId);
             $user->creditPoint = $user->creditPoint + $payment->creditPoint;
             // echo "<pre>";
@@ -652,5 +687,4 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
-    
 }

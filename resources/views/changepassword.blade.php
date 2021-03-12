@@ -17,6 +17,11 @@
       <div class="card-body">
         <form method="post" action="{{ url('/chpassword')}}">
             @csrf
+            @if(Session::has('error'))
+                <div class="alert alert-danger" role="alert">{{Session::get("error")}}</div>
+            @elseif(Session::has('success'))
+                <div class="alert alert-success" role="alert">{{Session::get("success")}}</div>
+            @endif
           <div class="form-group d-flex">
             <label class="col-sm-2 offset-lg-1 text-right control-label mt-2">Old Password</label>
             <div class="col-sm-6">

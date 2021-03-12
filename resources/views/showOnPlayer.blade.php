@@ -106,7 +106,7 @@
 <script src="{{ asset('assets/js/data-table.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-          startTime();
+        startTime();
           function startTime() {
               var today = new Date();
               var h = today.getHours();

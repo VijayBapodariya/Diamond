@@ -125,7 +125,7 @@
         </div>
       </li> --}}
       <li class="nav-item dropdown nav-notifications">
-        <a class="nav-link dropdown-toggle m-2" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle m-2" href="{{url('/blockedPlayers')}}" id="notificationDropdown">
           <i class="fa fa-users mr-1"></i>Blocked Players
         </a>
       </li>

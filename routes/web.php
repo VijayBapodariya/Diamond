@@ -35,12 +35,23 @@ Route::group(['middleware' => 'CheckAuth'],function () {
         Route::get('/distributer','DistributerController@index');
         Route::get('/retailer','ReatilerController@index');
         Route::get('/admin/detail/{id}','AdminController@detail');
-        Route::post('/get_data','AdminController@get_data');
-        Route::post('/get_distributer','AdminController@get_distributer');
+            Route::post('/get_data','AdminController@get_data');
+            Route::post('/get_distributer','AdminController@get_distributer');
         Route::get('admin/delete/{id}','AdminController@destroy');
         Route::get('/winhistory','CommanController@winhistory');
-        Route::post('/winhistorys','CommanController@winhistorys');
-        
+            Route::post('/winhistorys','CommanController@winhistorys');
+
+        Route::get('/winningPercent','AdminController@winningPercent');
+            Route::post('/percent','AdminController@percent');
+
+        Route::get('/Winbyadmin','AdminController@Winbyadmin');
+            Route::post('/winnerIdAdmin','AdminController@winnerIdAdmin');
+
+        Route::get('/announcement','CommanController@announcement');
+            Route::post('/announcements','CommanController@announcements');
+
+        Route::get('/complaint','AdminController@complaint');
+        Route::get('complaint/delete/{id}','AdminController@complaintDelete');
     });
 
     Route::group(['middleware' => 'superdistributer'],function(){
@@ -62,6 +73,7 @@ Route::group(['middleware' => 'CheckAuth'],function () {
     });
 
     Route::get('/OnPlayers','CommanController@OnPlayers');
+    Route::get('/blockedPlayers','CommanController@blockedPlayers');
     
     Route::get('/history','CommanController@history');
 
@@ -69,12 +81,6 @@ Route::group(['middleware' => 'CheckAuth'],function () {
     Route::get('/transactions','CommanController@transactions');
 
     Route::get('/cmbreport','CommanController@cmbreport');
-
-    Route::get('/winningPercent','AdminController@winningPercent');
-        Route::post('/percent','AdminController@percent');
-
-    Route::get('/Winbyadmin','AdminController@Winbyadmin');
-        Route::post('/percent','AdminController@percent');
 
     Route::get('/chpass','AdminController@chpass');
         Route::post('/chpassword','AdminController@chpassword');
