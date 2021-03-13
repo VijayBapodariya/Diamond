@@ -20,8 +20,11 @@ class SuperDistributerController extends Controller
     {
         $user = User::where('role', 'superDistributer')->orderBy('createdAt','DESC')
             ->get();
-        $users = User::all();
-        return view('superdistributer.index',['data' => $user,'users'=>$users]);
+        foreach ($user as $key => $value){
+            $refer = User::where('_id',new \MongoDB\BSON\ObjectID($value['referralId']))->first();
+            $user[$key]['refer']=$refer->userName;
+        }
+        return view('superdistributer.index',['data' => $user]);
     }
 
     /**

@@ -43,11 +43,7 @@
                       <td><a href="{{ url('super/detail/'.$value['_id']) }}">{{$value['userName']}}<i class="mdi mdi-eye"></i></a></td>
                       <td>{{$value['name']}}</td>
                       <td class="sorting_1">
-                        @foreach($users as $user)
-                          @if($value['referralId'] ==$user['_id'])
-                            {{$user['userName']}}
-                          @endif
-                        @endforeach
+                          {{$value['refer']}}
                       </td>
                       <td>{{number_format($value['creditPoint'],2)}}</td>
                       <td>

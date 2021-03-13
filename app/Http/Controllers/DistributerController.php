@@ -25,13 +25,15 @@ class DistributerController extends Controller
         // $distributer = User::where('isLogin',false)->get();
         // // echo "<pre>";print_r($distributer->toArray());
         // echo "<pre>";print_r($distributers->toArray());die;
-        $users = User::where('role', 'distributer')->orderBy('createdAt','DESC')
-                ->get();
-        foreach($users as $user){
-            $users = User::all();
+        
+        $user = User::where('role', 'distributer')->orderBy('createdAt','DESC')
+            ->get();
+        foreach ($user as $key => $value){
+            $refer = User::where('_id',new \MongoDB\BSON\ObjectID($value['referralId']))->first();
+            $user[$key]['refer']=$refer->userName;
         }
         
-        return view('superdistributer.index',['data' => $user,'users'=>$users]);
+        return view('superdistributer.index',['data' => $user]);
     }
 
     /**

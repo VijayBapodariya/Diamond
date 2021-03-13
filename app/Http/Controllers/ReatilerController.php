@@ -20,8 +20,14 @@ class ReatilerController extends Controller
     {
         $user = User::where('role', 'retailer')->orderBy('createdAt','DESC')
             ->get();
-        $users = User::all();
-        return view('retailer.index',['data' => $user,'users'=>$users]);
+        foreach ($user as $key => $value){
+            $refer = User::where('_id',new \MongoDB\BSON\ObjectID($value['referralId']))->first();
+            $user[$key]['refer']=$refer->userName;
+        }
+        // echo '<pre>';
+        // print_r($user->toArray());
+        // die();
+        return view('retailer.index',['data' => $user]);
     }
 
     /**

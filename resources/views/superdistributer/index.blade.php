@@ -43,16 +43,12 @@
                       <td><a href="{{ url('super/detail/'.$value['_id']) }}">{{$value['userName']}}<i class="mdi mdi-eye"></i></a></td>
                       <td>{{$value['name']}}</td>
                       <td class="sorting_1">
-                        @foreach($users as $user)
-                          @if($value['referralId'] ==$user['_id'])
-                            {{$user['userName']}}
-                          @endif
-                        @endforeach
+                            {{$value['refer']}}
                       </td>
                       <td>{{number_format($value['creditPoint'],2)}}</td>
                       <td>
                             <div class="btn-group">
-                                <a href="{{ url('users/edit/'.$value['_id'])}}" type="button" class="btn btn-outline-info" title="Edit user"><i class="mdi mdi-pencil-box" style="font-size:20px;"></i></a>
+                                <a href="{{ url('super/edit/'.$value['_id'])}}" type="button" class="btn btn-outline-info" title="Edit user"><i class="mdi mdi-pencil-box" style="font-size:20px;"></i></a>
                                 <a href="{{ url('transfercredit/'.$value['_id']) }}" class="btn btn-outline-success" title="Transfer Credit"><i class="mdi mdi-package-up" style="font-size:20px;"></i></a>
                                 <a href="{{ url('adjustcredit/'.$value['_id'])}}" class="btn btn-outline-warning" title="Adjust Credit"><i class="mdi mdi-package-down" style="font-size:20px;"></i></a>
                                 @if($value['isActive']==1)

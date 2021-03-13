@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\retailerController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,6 +33,7 @@ Route::group(['middleware' => 'CheckAuth'],function () {
         Route::get('/detail/{id}','AdminController@detail');
         Route::get('/admin/delete/{id}','AdminController@destroy');
         Route::get('/superdistributer','SuperDistributerController@index');
+        Route::get('super/edit/{id}','AdminController@edit');
         Route::get('/distributer','DistributerController@index');
         Route::get('/retailer','ReatilerController@index');
         Route::get('/admin/detail/{id}','AdminController@detail');
@@ -67,9 +69,7 @@ Route::group(['middleware' => 'CheckAuth'],function () {
     });
 
     Route::group(['middleware' => 'retailer'],function(){
-        // Route::resources([
-        //     'retailer' => 'retailerController',  
-        // ]);
+        // Route::get('/retailers','ReatilerController@index');
     });
 
     Route::get('/OnPlayers','CommanController@OnPlayers');

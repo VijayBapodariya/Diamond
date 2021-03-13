@@ -47,10 +47,6 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        // echo "<pre>";
-        // print_r($request->toArray());
-        // die();
-
         $request->validate([
             'name' => 'required',
             'firmName' => 'required',
@@ -103,12 +99,13 @@ class AdminController extends Controller
             $permissions[$va] = true;
         }
 
+        $password = intval(trim($request->password,'"'));
         // echo "<pre>";
         // print_r($userName);die();
         $user = new User();
         $user->name = $request->name;
         $user->userName = $userName;
-        $user->password = $request->password;
+        $user->password = $password;
         $user->firmName = $request->firmName;
         $user->role = $role;
         $user->isActive = true;
@@ -122,7 +119,6 @@ class AdminController extends Controller
         $user->save();
         $user = User::where('role', 'Admin')->get();
         return view('admin.view', ['data' => $user]);
-
     }
 
     /**
@@ -145,6 +141,7 @@ class AdminController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
+        // echo "<pre>";print_r($user->toArray());die();
         $data = User::all();
         return view('admin.edit', ['edata' => $user, 'udata' => $data]);
     }

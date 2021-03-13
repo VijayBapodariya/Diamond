@@ -142,72 +142,73 @@
                 @enderror
             </div>
           </div>
-          <div class="form-group d-flex">
-            <label class="col-sm-2 offset-lg-1 text-right control-label mt-2">Sharing Percentage</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control ui-autocomplete-input @error('sharingPercentage') is-invalid @enderror" id="exampleInputUsername1" value="{{$edata['sharingPercentage']}}" name="sharingPercentage" autocomplete="off" placeholder="Plz Enter sharingPercentage">
-                @error('sharingPercentage')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
+        <div class="form-group d-flex" id="perissions">
+          <label class="col-sm-2 offset-lg-1 text-right control-label mt-2">Sharing Permission</label>
+          <div class="col-sm-3">
+            <div class="form-check form-check-flat form-check-primary">
+              <label class="form-check-label" id="full_permission">
+                <input type="checkbox" class="form-check-input" name="permission[]" value="full_permission" {{ (isset($edata['permissions']['full_permission'])==true) ? 'checked' : ''}}>
+                Full_Permission
+              </label>
             </div>
-        </div>
-          <div class="form-group d-flex" id="perissions">
-            <label class="col-sm-2 offset-lg-1 text-right control-label mt-2">Sharing Percentage</label>
-            <div class="col-sm-3">
-              <div class="form-check form-check-flat form-check-primary">
-                <label class="form-check-label">
-                  <input type="checkbox"   class="form-check-input" name="permission[]" value="full_permission" {{ (isset($edata['permissions']['full_permission'])==true) ? 'checked' : ''}}>
-                  Full_Permission
-                </label>
-              </div>
-              <div class="form-check form-check-flat form-check-primary">
-                <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input" name="permission[]" value="add_user" {{ (isset($edata['permissions']['add_user'])==true) ? 'checked' : ''}}>
-                  Add User
-                </label>
-              </div>
-              <div class="form-check form-check-flat form-check-primary">
-                <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input" name="permission[]" value="view_user" {{ (isset($edata['permissions']['view_user'])==true) ? 'checked' : ''}}>
-                  View User
-                </label>
-              </div>
-              <div class="form-check form-check-flat form-check-primary">
-                <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input" name="permission[]"  value="users" {{ (isset($edata['permissions']['users'])==true) ? 'checked' : ''}}>
-                  users
-                </label>
-              </div>
+            <div class="form-check form-check-flat form-check-primary">
+              <label class="form-check-label" id="add_user">
+                <input type="checkbox" class="form-check-input" name="permission[]" value="add_user" {{ (isset($edata['permissions']['add_user'])==true) ? 'checked' : ''}}>
+                Add User
+              </label>
             </div>
-            <div class="col-sm-3">
-              <div class="form-check form-check-flat form-check-primary">
-                <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input" name="permission[]"  value="distributer" {{ (isset($edata['permissions']['distributer'])==true) ? 'checked' : ''}}>
-                  Distributer
-                </label>
-              </div>
-              {{-- <div class="form-check form-check-flat form-check-primary">
-                <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input" name="permission[]"  value="full_permission">
-                  Full_Permission
-                </label>
-              </div>
-              <div class="form-check form-check-flat form-check-primary">
-                <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input" name="permission[]"  value="full_permission">
-                  Full_Permission
-                </label>
-              </div>
-              <div class="form-check form-check-flat form-check-primary">
-                <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input" name="permission[]"  value="full_permission">
-                  Full_Permission
-                </label>
-              </div> --}}
+            <div class="form-check form-check-flat form-check-primary">
+              <label class="form-check-label" id="view_user">
+                <input type="checkbox" class="form-check-input" name="permission[]" value="view_user" {{ (isset($edata['permissions']['view_user'])==true) ? 'checked' : ''}}>
+                View User
+              </label>
             </div>
-        </div>
+            <div class="form-check form-check-flat form-check-primary">
+              <label class="form-check-label" id="superdistributer">
+                <input type="checkbox" class="form-check-input" name="permission[]"  value="superdistributer" {{ (isset($edata['permissions']['superdistributer'])==true) ? 'checked' : ''}}>
+                Superdistributer
+              </label>
+            </div>
+            <div class="form-check form-check-flat form-check-primary">
+              <label class="form-check-label" id="distributer">
+                <input type="checkbox" class="form-check-input" name="permission[]"  value="distributer" {{ (isset($edata['permissions']['distributer'])==true) ? 'checked' : ''}}>
+                Distributer
+              </label>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-check form-check-flat form-check-primary">
+              <label class="form-check-label" id="retailer">
+                <input type="checkbox" class="form-check-input" name="permission[]"  value="retailer" {{ (isset($edata['permissions']['retailer'])==true) ? 'checked' : ''}}>
+                Retailer
+              </label>
+            </div>
+            <div class="form-check form-check-flat form-check-primary">
+              <label class="form-check-label" id="winningPercent">
+                <input type="checkbox" class="form-check-input" name="permission[]"  value="winningPercent" {{ (isset($edata['permissions']['winningPercent'])==true) ? 'checked' : ''}}>
+                WinningPercent
+              </label>
+            </div>
+            <div class="form-check form-check-flat form-check-primary">
+              <label class="form-check-label" id="winbyadmin">
+                <input type="checkbox" class="form-check-input" name="permission[]"  value="winbyadmin" {{ (isset($edata['permissions']['winbyadmin'])==true) ? 'checked' : ''}}>
+                Winbyadmin
+              </label>
+            </div>
+            <div class="form-check form-check-flat form-check-primary">
+              <label class="form-check-label" id="announcement">
+                <input type="checkbox" class="form-check-input" name="permission[]"  value="announcement" {{ (isset($edata['permissions']['announcement'])==true) ? 'checked' : ''}}>
+                Announcement
+              </label>
+            </div>
+            <div class="form-check form-check-flat form-check-primary">
+              <label class="form-check-label" id="complaint">
+                <input type="checkbox" class="form-check-input" name="permission[]"  value="complaint" {{ (isset($edata['permissions']['complaint'])==true) ? 'checked' : ''}}>
+                Complaint
+              </label>
+            </div>
+          </div>
+      </div>
           <div class="form-group d-flex">
             <label class="col-sm-2 offset-lg-1 text-right control-label mt-2"></label>
             <div class="col-sm-6">
