@@ -77,7 +77,7 @@ Route::group(['middleware' => 'CheckAuth'],function () {
     
     Route::get('/history','CommanController@history');
 
-    Route::get('/Tnover/{type}/{from}/{to}','TnOvercontroller@index');
+    Route::get('/Tnover/{type}/{from}/{to}','TnOverController@index');
     Route::get('/transactions','CommanController@transactions');
 
     Route::get('/cmbreport','CommanController@cmbreport');
