@@ -128,8 +128,157 @@ class CommanController extends Controller
 
     public function cmbreport()
     {
+        $resArray=array();
+        $totalStartPoint = 0;
+        $totalPlayPoints=0;
+        $TotalWinPoints=0;
+        $EndPoint=0;
+        $TotalRetailerCommission = 0;
+        $TotalDistributerCommission = 0;
+        $TotalSuperDistributerCommission = 0;
+        $TotalCommission = 0;
 
-        return view('commissionPayout');
+        if(Session::get('role')=="Admin"){
+            $superdistributer = User::where('role','superDistributer')->where('referralId',new \MongoDB\BSON\ObjectID(Session::get('id')))->get();
+            $admin = User::where('_id',new \MongoDB\BSON\ObjectID(Session::get('id')))->first();
+            // echo "<pre>";print_r($admin->toArray());die();
+            foreach($superdistributer as $super){
+                $distributer = User::where('referralId',new \MongoDB\BSON\ObjectID($super['_id']))->get();
+                foreach($distributer as $dis_user){
+                    $retailer = User::where('referralId',new \MongoDB\BSON\ObjectID($dis_user['_id']))->get();
+                    $retailers = [];
+                    foreach($retailer as $re_user){
+                        $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']);
+                    } 
+                    $playPoints = Bets::whereIn('retailerId',$retailers)
+                                        ->orderBy('DrDate')
+                                        ->get()
+                                        ->groupBy(function ($val) {
+                                            return Carbon::parse($val->DrDate)->format('d-m-Y');
+                                        });
+                    // echo "<pre>";print_r($playPoints->toArray());die();
+                    $commission = [];
+                    foreach($playPoints as $day => $players) {
+                        foreach($players as $player){
+                            $commission[$day]['userName'] = $admin['userName'];
+                            $commission[$day]['role'] = $admin['role'];
+                            $commission[$day]['name'] = $admin['name'];
+                            $commission[$day]['super'] = $super['userName'];
+                            $commission[$day]['dis'] = $dis_user['userName'];
+                            foreach($retailer as $re_user){
+                                if($re_user['_id']==$player['retailerId']){
+                                    $commission[$day]['retailer'] = $re_user['userName'];
+                                }
+                            }
+                            $TotalRetailerCommission += $player['retailerCommission'];
+                            $TotalDistributerCommission += $player['distributerCommission'];
+                            $TotalSuperDistributerCommission += $player['superDistributerCommission'];
+                            $commission[$day]['TotalRetailerCommission'] = $TotalRetailerCommission;
+                            $commission[$day]['TotalDistributerCommission'] = $TotalDistributerCommission;
+                            $commission[$day]['TotalSuperDistributerCommission'] = $TotalSuperDistributerCommission;
+                        }
+                    }
+                    
+                    // echo "<pre>";print_r($commission);die();
+                    return view('commissionPayout', ['data' => $commission]);
+                }
+            }
+        }elseif(Session::get('role')=="superDistributer"){
+            $superDistributer = User::where('_id',new \MongoDB\BSON\ObjectID(Session::get('id')))->first();
+            $distributer = User::where('referralId',new \MongoDB\BSON\ObjectID(Session::get('id')))->get();
+            foreach($distributer as $dis_user){
+                $retailer = User::where('referralId',new \MongoDB\BSON\ObjectID($dis_user['_id']))->get();
+                $retailers = [];
+                foreach($retailer as $re_user){
+                    $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']); 
+                }   
+                $playPoints = Bets::whereIn('retailerId',$retailers)
+                                        ->orderBy('DrDate')
+                                        ->get()
+                                        ->groupBy(function ($val) {
+                                            return Carbon::parse($val->DrDate)->format('d-m-Y');
+                                        });
+                // echo "<pre>";print_r($playPoints->toArray());die();
+                $commission = [];
+                foreach($playPoints as $day => $players){
+                    foreach($players as $player){
+                        $commission[$day]['userName'] = $superDistributer['userName'];
+                        $commission[$day]['role'] = $superDistributer['role'];
+                        $commission[$day]['name'] = $superDistributer['name'];
+                        $commission[$day]['dis'] = $dis_user['userName'];
+                        foreach($retailer as $re_user){
+                            if($re_user['_id']==$player['retailerId']){
+                                $commission[$day]['retailer'] = $re_user['userName'];
+                            }
+                        }
+                        $TotalRetailerCommission += $player['retailerCommission'];
+                        $TotalDistributerCommission += $player['distributerCommission'];
+                        $commission[$day]['TotalRetailerCommission'] = $TotalRetailerCommission;
+                        $commission[$day]['TotalDistributerCommission'] = $TotalDistributerCommission;
+                    }
+                }
+                return view('commissionPayout', ['data' => $commission]);
+                // return view('history', ['data' => $playPoints]);
+            }
+        }elseif(Session::get('role')=="distributer"){
+            $distributer = User::where('_id',new \MongoDB\BSON\ObjectID(Session::get('id')))->first();
+            $retailer = User::where('referralId',new \MongoDB\BSON\ObjectID(Session::get('id')))->get();
+            $retailers = [];
+            foreach($retailer as $re_user){
+                $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']); 
+            }   
+            $playPoints = Bets::whereIn('retailerId',$retailers)
+                                        ->orderBy('DrDate')
+                                        ->get()
+                                        ->groupBy(function ($val) {
+                                            return Carbon::parse($val->DrDate)->format('d-m-Y');
+                                        });
+            // echo "<pre>";print_r($playPoints->toArray());die();
+            $commission = [];
+            foreach($playPoints as $day => $players){
+                foreach($players as $player){
+                    $commission[$day]['userName'] = $distributer['userName'];
+                    $commission[$day]['role'] = $distributer['role'];
+                    $commission[$day]['name'] = $distributer['name'];
+                    foreach($retailer as $re_user){
+                        if($re_user['_id']==$player['retailerId']){
+                            $commission[$day]['retailer'] = $re_user['userName'];
+                        }
+                    }
+                    $TotalRetailerCommission += $player['retailerCommission'];
+                    $commission[$day]['TotalRetailerCommission'] = $TotalRetailerCommission;
+                }
+            }
+            // echo "<pre>";print_r($commission);die();
+            return view('commissionPayout', ['data' => $commission]);
+        }elseif(Session::get('role')=="retailer"){
+            $retailerd = User::where('_id',new \MongoDB\BSON\ObjectID(Session::get('id')))->first();
+            $retailer = User::where('_id',new \MongoDB\BSON\ObjectID(Session::get('id')))->get();
+            // echo "<pre>";print_r($retailer->toArray());die();
+            $retailers = [];
+            foreach($retailer as $re_user){
+                $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']); 
+            }
+            $playPoints = Bets::whereIn('retailerId',$retailers)
+                                        ->orderBy('DrDate')
+                                        ->get()
+                                        ->groupBy(function ($val) {
+                                            return Carbon::parse($val->DrDate)->format('d-m-Y');
+                                        });
+            // echo "<pre>";print_r($playPoints->toArray());die();
+            $commission = [];
+            foreach($playPoints as $day => $players){
+                foreach($players as $player){
+                    $commission[$day]['userName'] = $retailerd['userName'];
+                    $commission[$day]['role'] = $retailerd['role'];
+                    $commission[$day]['name'] = $retailerd['name'];
+                    $TotalRetailerCommission += $player['retailerCommission'];
+                    $commission[$day]['TotalRetailerCommission'] = $TotalRetailerCommission;
+                }
+            }
+            // echo "<pre>";print_r($commission);die();
+            return view('commissionPayout', ['data' => $commission]);
+        }
     }
 
     public function announcement()

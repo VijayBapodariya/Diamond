@@ -86,7 +86,6 @@ class LoginController extends Controller
                         Session::put('id', $users['id']);
                         Session::put('transactionPin',$users['transactionPin']);
                         Session::put('permissions',$users['permissions']);
-                            
                             return redirect()->intended('/dashboard');
                     }elseif($users['role']=="distributer"){
                         Session::put('username', $users['userName']);

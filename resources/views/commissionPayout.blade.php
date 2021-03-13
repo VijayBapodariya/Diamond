@@ -12,7 +12,7 @@
   </ol>
 </nav> --}}
 
-<div class="row">
+{{-- <div class="row">
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
@@ -40,7 +40,7 @@
         </div>
     </div>
   </div>
-</div>
+</div> --}}
 
 <div class="row">
   <div class="col-md-12 grid-margin stretch-card">
@@ -56,47 +56,71 @@
                     <th>Username</th>
                     <th>User Type</th>
                     <th>Name</th>
+                    @if(Session::get('role')=="Admin")
+                    <th>SuperDistributer</th>
+                    @endif
+                    @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin")
+                    <th>Distributer</th>
+                    @endif
+                    @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin" || Session::get('role')=="distributer")
                     <th>Retailer/Player</th>
-                    <th>Commission Amount</th>
+                    @endif
+                    @if(Session::get('role')=="Admin")
+                    <th>SuperDistributer Amount</th>
+                    @endif
+                    @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin")
+                      <th>Distributer Amount</th>
+                    @endif
+                    <th>Retailer Amount</th>
                 </tr>
               </thead>
-              <tbody>					    						      
+              <tbody>		
+                @php $no =1; $totalS = 0; $totalD = 0; $totalR = 0;@endphp
+                @foreach($data as $day => $value)			    						      
                 <tr>
-                    <td>1</td>
-                    <td>2021-02-10</td>
-                    <td>500127</td>
-                    <td><!--Stockez -->Distributor</td>
-                    <td>ajitpatil 2</td>
-                    <td>100653</td>
-                    <td>0.00</td>
+                    <td>{{$no++}}</td>
+                    <td>{{$day}}</td>
+                    <td>{{$value['userName']}}</td>
+                    <td>{{$value['role']}}</td>
+                    <td>{{$value['name']}}</td>
+                    @if(Session::get('role')=="Admin")
+                      <td>{{$value['super']}}</td>
+                    @endif
+                    @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin")
+                      <td>{{$value['dis']}}</td>
+                    @endif
+                    @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin" || Session::get('role')=="distributer")
+                      <td>{{$value['retailer']}}</td>
+                    @endif
+                    @if(Session::get('role')=="Admin")
+                      <td>{{$totalS += number_format($value['TotalSuperDistributerCommission'],2)}}</td>
+                    @endif
+                    @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin")
+                      <td>{{$totalD += number_format($value['TotalDistributerCommission'],2)}}</td>
+                    @endif
+                    <td>{{$totalR += number_format($value['TotalRetailerCommission'],2)}}</td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>2021-02-12</td>
-                    <td>500127</td>
-                    <td><!--Stockez -->Distributor</td>
-                    <td>ajitpatil 2</td>
-                    <td>100653</td>
-                    <td>0.00</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>2021-02-19</td>
-                    <td>500127</td>
-                    <td><!--Stockez -->Distributor</td>
-                    <td>ajitpatil 2</td>
-                    <td>100653</td>
-                    <td>0.00</td>
-                </tr>
+                @endforeach
                                                 
                 <tr>
                     <td></td>
                     <td colspan="2">Total Commission</td>
                     <td></td>
                     <td></td>
+                    @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin" || Session::get('role')=="distributer")
                     <td></td>
-                    <td>0</td>
-
+                    @endif
+                    @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin")
+                    <td></td>
+                    @endif
+                    @if(Session::get('role')=="Admin")
+                    <td></td>
+                    <td>{{$totalS}}</td>
+                    @endif
+                    @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin")
+                    <td>{{$totalD}}</td>
+                    @endif
+                    <td>{{$totalR}}</td>
                 </tr>
                 </tbody>
             </table>

@@ -14,10 +14,13 @@ class TnOverController extends Controller
     {
         // return view('turnOver');
         $resArray=array();
+        $totalStartPoint = 0;
         $totalPlayPoints=0;
         $TotalWinPoints=0;
         $EndPoint=0;
         $TotalRetailerCommission = 0;
+        $TotalDistributerCommission = 0;
+        $TotalSuperDistributerCommission = 0;
         $TotalCommission = 0;
         $today=date_create(date("Y-m-d"));
 
@@ -56,25 +59,25 @@ class TnOverController extends Controller
                     }
                     // echo "<pre>";print_r($playPoints->toArray());die(); 
                     foreach($playPoints as $play){
+                        $totalStartPoint += $play['startPoint'];
                         $totalPlayPoints += $play['betPoint'];
                         $TotalWinPoints += $play['won'];
-                        $EndPoint += $totalPlayPoints - $TotalWinPoints;
-                        $TotalRetailerCommission = 0;
-                        $TotalCommission = 0;
+                        $EndPoint = $totalStartPoint - $totalPlayPoints + $TotalWinPoints;
+                        $TotalRetailerCommission += $play['retailerCommission'];
+                        $TotalDistributerCommission += $play['distributerCommission'];
+                        $TotalSuperDistributerCommission += $play['superDistributerCommission'];
                     }
                     $total = [];
+                    $total['totalStartPoint'] = $totalStartPoint;
                     $total['totalPlayPoints'] = $totalPlayPoints;
                     $total['TotalWinPoints'] = $TotalWinPoints;
                     $total['EndPoint'] = $EndPoint;
                     $total['TotalRetailerCommission'] = $TotalRetailerCommission;
-                    $total['TotalCommission'] = $TotalCommission;
+                    $total['TotalDistributerCommission'] = $TotalDistributerCommission;
+                    $total['TotalSuperDistributerCommission'] = $TotalSuperDistributerCommission;
                     return view('turnOver', ['data' => $admin,'total'=>$total]);
                 }
             }
-            echo "<pre>";print_r($playPoints->toArray());die();
-            // echo "<pre>";print_r($superdistributer->toArray());die();
-            $playPoints = Bets::orderBy('createdAt','DESC')->get();
-            // return view('history', ['data' => $playPoints]);
         }elseif(Session::get('role')=="superDistributer"){
             $superDistributer = User::where('_id',new \MongoDB\BSON\ObjectID(Session::get('id')))->get();
             $distributer = User::where('referralId',new \MongoDB\BSON\ObjectID(Session::get('id')))->get();
@@ -100,18 +103,22 @@ class TnOverController extends Controller
                 }
                 // echo "<pre>";print_r($playPoints->toArray());die(); 
                 foreach($playPoints as $play){
+                    $totalStartPoint += $play['startPoint'];
                     $totalPlayPoints += $play['betPoint'];
                     $TotalWinPoints += $play['won'];
-                    $EndPoint += $totalPlayPoints - $TotalWinPoints;
-                    $TotalRetailerCommission = 0;
-                    $TotalCommission = 0;
+                    $EndPoint = $totalStartPoint - $totalPlayPoints + $TotalWinPoints;
+                    $TotalRetailerCommission += $play['retailerCommission'];
+                    $TotalDistributerCommission += $play['distributerCommission'];
+                    $TotalSuperDistributerCommission += $play['superDistributerCommission'];
                 }
                 $total = [];
+                $total['totalStartPoint'] = $totalStartPoint;
                 $total['totalPlayPoints'] = $totalPlayPoints;
                 $total['TotalWinPoints'] = $TotalWinPoints;
                 $total['EndPoint'] = $EndPoint;
                 $total['TotalRetailerCommission'] = $TotalRetailerCommission;
-                $total['TotalCommission'] = $TotalCommission;
+                $total['TotalDistributerCommission'] = $TotalDistributerCommission;
+                $total['TotalSuperDistributerCommission'] = $TotalSuperDistributerCommission;
                 return view('turnOver', ['data' => $superDistributer,'total'=>$total]);
                 // return view('history', ['data' => $playPoints]);
             }
@@ -138,18 +145,22 @@ class TnOverController extends Controller
             }
             // echo "<pre>";print_r($playPoints->toArray());die(); 
             foreach($playPoints as $play){
+                $totalStartPoint += $play['startPoint'];
                 $totalPlayPoints += $play['betPoint'];
                 $TotalWinPoints += $play['won'];
-                $EndPoint += $totalPlayPoints - $TotalWinPoints;
-                $TotalRetailerCommission = 0;
-                $TotalCommission = 0;
+                $EndPoint = $totalStartPoint - $totalPlayPoints + $TotalWinPoints;
+                $TotalRetailerCommission += $play['retailerCommission'];
+                $TotalDistributerCommission += $play['distributerCommission'];
+                $TotalSuperDistributerCommission += $play['superDistributerCommission'];
             }
             $total = [];
+            $total['totalStartPoint'] = $totalStartPoint;
             $total['totalPlayPoints'] = $totalPlayPoints;
             $total['TotalWinPoints'] = $TotalWinPoints;
             $total['EndPoint'] = $EndPoint;
             $total['TotalRetailerCommission'] = $TotalRetailerCommission;
-            $total['TotalCommission'] = $TotalCommission;
+            $total['TotalDistributerCommission'] = $TotalDistributerCommission;
+            $total['TotalSuperDistributerCommission'] = $TotalSuperDistributerCommission;
             return view('turnOver', ['data' => $distributer,'total'=>$total]);
         }elseif(Session::get('role')=="retailer"){
             $retailerd = User::where('_id',new \MongoDB\BSON\ObjectID(Session::get('id')))->get();
@@ -174,18 +185,22 @@ class TnOverController extends Controller
             }
             // echo "<pre>";print_r($playPoints->toArray());die(); 
             foreach($playPoints as $play){
+                $totalStartPoint += $play['startPoint'];
                 $totalPlayPoints += $play['betPoint'];
                 $TotalWinPoints += $play['won'];
-                $EndPoint += $totalPlayPoints - $TotalWinPoints;
-                $TotalRetailerCommission = 0;
-                $TotalCommission = 0;
+                $EndPoint = $totalStartPoint - $totalPlayPoints + $TotalWinPoints;
+                $TotalRetailerCommission += $play['retailerCommission'];
+                $TotalDistributerCommission += $play['distributerCommission'];
+                $TotalSuperDistributerCommission += $play['superDistributerCommission'];
             }
             $total = [];
+            $total['totalStartPoint'] = $totalStartPoint;
             $total['totalPlayPoints'] = $totalPlayPoints;
             $total['TotalWinPoints'] = $TotalWinPoints;
             $total['EndPoint'] = $EndPoint;
             $total['TotalRetailerCommission'] = $TotalRetailerCommission;
-            $total['TotalCommission'] = $TotalCommission;
+            $total['TotalDistributerCommission'] = $TotalDistributerCommission;
+            $total['TotalSuperDistributerCommission'] = $TotalSuperDistributerCommission;
             return view('turnOver', ['data' => $retailerd,'total'=>$total]);
         }
         // return view('turnOver');

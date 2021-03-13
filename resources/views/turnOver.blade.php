@@ -38,20 +38,20 @@
         <div class="card-body">
             <div class="breadcrumb bg-light" id="live2">
                 <div class="col-sm-3 text-center">
-                    Total Play Points<br> <span>{{$total['totalPlayPoints']}}</span>
+                    Total Play Points<br> <span>{{number_format($total['totalPlayPoints'],2)}}</span>
                 </div>
                 <div class="col-sm-3 text-center">
-                    Total Win Points <br> <span>{{$total['TotalWinPoints']}}</span>
+                    Total Win Points <br> <span>{{number_format($total['TotalWinPoints'],2)}}</span>
                 </div>
                 <div class="col-sm-3 text-center">
-                    End Point <br> <span>{{$total['EndPoint']}}</span>
+                    End Point <br> <span>{{number_format($total['EndPoint'],2)}}</span>
                 </div>
-                {{-- <div class="col-sm-3 text-center">
-                    Total Retailer Commission <br> <span>{{$total['TotalRetailerCommission']}}</span>
+                <div class="col-sm-3 text-center">
+                    Total Retailer Commission <br> <span>{{number_format($total['TotalRetailerCommission'],2)}}</span>
+                </div>
+                {{-- <div class="col-sm-3 text-center">	
+                    Total Commission <br> <span>{{number_format($total['TotalCommission']}}</span>                  
                 </div> --}}
-                <div class="col-sm-3 text-center">	
-                    Total Commission <br> <span>{{$total['TotalCommission']}}</span>                  
-                </div>
                 
             </div>
         </div>
@@ -88,9 +88,9 @@
                   <td>{{number_format($total['totalPlayPoints'],2)}}</td>
                   <td>{{number_format($total['TotalWinPoints'],2)}}</td>
                   <td>{{number_format($total['EndPoint'],2)}}</td>
-                  <td>0</td>
-                  <td>0</td>
-                  <td>0</td>
+                  <td>{{number_format($total['TotalSuperDistributerCommission'],2)}}</td>
+                  <td>{{number_format($total['TotalDistributerCommission'],2)}}</td>
+                  <td>{{number_format($total['TotalRetailerCommission'],2)}}</td>
                   <td>TN</td>
                 </tr>
                 @endforeach
