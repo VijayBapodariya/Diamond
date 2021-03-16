@@ -13,7 +13,7 @@
   </ol>
 </nav> --}}
 
-<div class="row">
+{{-- <div class="row">
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
@@ -34,7 +34,7 @@
                     <label class="col-sm-1 control-label mt-2">From :</label>
                     <div class="col-sm-5">
                         <div class="input-group date datepicker" id="datePickerExample">
-                            <input type="text" class="form-control" name="from"><span class="input-group-addon"><i data-feather="calendar"></i></span>
+                            <input type="text" class="form-control" name="from" id="from" ><span class="input-group-addon"><i data-feather="calendar"></i></span>
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                     <label class="col-sm-1 control-label mt-2">To :</label>
                     <div class="col-sm-5">
                         <div class="input-group date datepicker" id="datePickerExample1">
-                            <input type="text" class="form-control" name="to"><span class="input-group-addon"><i data-feather="calendar"></i></span>
+                            <input type="text" class="form-control" name="to" id="to"><span class="input-group-addon"><i data-feather="calendar"></i></span>
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
         </div>
     </div>
   </div>
-</div>
+</div> --}}
 
 <div class="row">
   <div class="col-md-12 grid-margin stretch-card">

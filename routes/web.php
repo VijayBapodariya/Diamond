@@ -33,6 +33,7 @@ Route::group(['middleware' => 'CheckAuth'],function () {
         Route::get('/detail/{id}','AdminController@detail');
         Route::get('/admin/delete/{id}','AdminController@destroy');
         Route::get('super/edit/{id}','AdminController@edit');
+        Route::get('distributer/edit/{id}','AdminController@edit');
         Route::get('super/detail/{id}','AdminController@detail');
         Route::get('/superdistributer','SuperDistributerController@index');
         Route::get('/retailer','ReatilerController@index');
@@ -56,8 +57,10 @@ Route::group(['middleware' => 'CheckAuth'],function () {
         Route::get('complaint/delete/{id}','AdminController@complaintDelete');
     });
 
-
     Route::get('/detail/{id}','AdminController@detail');
+
+    Route::get('distributer/edit/{id}','AdminController@edit');
+    Route::get('retailer/edit/{id}','AdminController@edit');
 
     Route::get('/distributer','DistributerController@index');
     Route::get('/retailer','ReatilerController@index');
@@ -68,9 +71,11 @@ Route::group(['middleware' => 'CheckAuth'],function () {
     Route::get('/blockedPlayers','CommanController@blockedPlayers');
     
     Route::get('/history','CommanController@history');
+    Route::post('/historyId','CommanController@historyId');
 
     Route::get('/Tnover/{type}/{from}/{to}','TnOverController@index');
     Route::get('/transactions','CommanController@transactions');
+    Route::post('/transaction','CommanController@transaction');
 
     Route::get('/cmbreport','CommanController@cmbreport');
 

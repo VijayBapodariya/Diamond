@@ -48,8 +48,8 @@ class CommanController extends Controller
 
     public function history()
     {   
-        $playPoint = Bets::orderBy('createdAt','DESC')->get();
-        foreach ($playPoint as $play){
+        $playPoints = Bets::orderBy('createdAt','DESC')->paginate(10);
+        foreach ($playPoints as $play){
             if(Session::get('role')=="Admin"){
                     $playPoints = Bets::orderBy('createdAt','DESC')->paginate(10);
                     return view('history', ['data' => $playPoints]);
@@ -70,14 +70,43 @@ class CommanController extends Controller
                 foreach($retailer as $re_user){
                     $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']); 
                 }   
-                $playPoints = Bets::whereIn('retailerId',$retailers)->orderBy('createdAt','DESC')->get();
+                $playPoints = Bets::whereIn('retailerId',$retailers)->orderBy('createdAt','DESC')->paginate(10);
                 return view('history', ['data' => $playPoints]);
             }elseif(Session::get('role')=="retailer"){
-                if($play['retailerId']==Session::get('id')){
-                    $playPoints = Bets::where('retailerId',$play['retailerId'])->orderBy('createdAt','DESC')->get();
-                    return view('history', ['data' => $playPoints]);
-                }
+                $playPoints = Bets::where('retailerId',new \MongoDB\BSON\ObjectID(Session::get('id')))->orderBy('createdAt','DESC')->paginate(10);
+                return view('history', ['data' => $playPoints]);
             }
+        }
+    }
+
+    public function historyId(Request $request)
+    {
+
+        if(Session::get('role')=="Admin"){
+            $playPoints = Bets::where('ticketId',$request->ticket)->orderBy('createdAt','DESC')->paginate(10);
+            return view('history', ['data' => $playPoints]);
+        }elseif(Session::get('role')=="superDistributer"){
+            $distributer = User::where('referralId',new \MongoDB\BSON\ObjectID(Session::get('id')))->get();
+            foreach($distributer as $dis_user){
+                $retailer = User::where('referralId',new \MongoDB\BSON\ObjectID($dis_user['_id']))->get();
+                $retailers = [];
+                foreach($retailer as $re_user){
+                    $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']);
+                }   
+                $playPoints = Bets::whereIn('retailerId',$retailers)->where('ticketId',$request->ticket)->orderBy('createdAt','DESC')->paginate(10);
+                return view('history', ['data' => $playPoints]);
+            }
+        }elseif(Session::get('role')=="distributer"){
+            $retailer = User::where('referralId',new \MongoDB\BSON\ObjectID(Session::get('id')))->get();
+            $retailers = [];
+            foreach($retailer as $re_user){
+                $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']); 
+            }
+            $playPoints = Bets::whereIn('retailerId',$retailers)->where('ticketId',$request->ticket)->orderBy('createdAt','DESC')->paginate(10);
+            return view('history', ['data' => $playPoints]);
+        }elseif(Session::get('role')=="retailer"){
+            $playPoints = Bets::where('ticketId',$request->ticket)->where('retailerId',new \MongoDB\BSON\ObjectID(Session::get('id')))->orderBy('createdAt','DESC')->paginate(10);
+            return view('history', ['data' => $playPoints]);
         }
     }
 
@@ -119,14 +148,32 @@ class CommanController extends Controller
 
     public function transactions()
     {
-        $users = User::all();
+        $users = User::where('role', '!=', 'Admin')->get();
+        // echo "<pre>";print_r($users->toArray());die;
         $user = User::where('_id',Session::get('id'))->get();
         $payment = Payments::where('fromId',Session::get('id'))->orderBy('createdAt','DESC')->get();
         foreach($payment as $key => $pay){
-            $users = User::where('_id',new \MongoDB\BSON\ObjectID($pay['toId']))->first();
+            $refer = User::where('_id',new \MongoDB\BSON\ObjectID($pay['toId']))->first();
             // echo "<pre>";print_r($users);die();
             // $payment[$key]['createdAt'] = Carbon::parse( $pay['createdAt'] )->toDayDateTimeString();
-            $payment[$key]['userName']=$users['userName'];
+            $payment[$key]['userName']=$refer['userName'];
+        }
+        // echo "<pre>";print_r($payment->toArray());die;
+        return view('transaction',['data'=>$users,'payment'=>$payment,'user'=>$user]);
+    }
+
+    public function transaction(Request $request)
+    {
+        echo "<pre>";print_r($request->toArray());die;
+        $users = User::where('role', '!=', 'Admin')->get();
+        // echo "<pre>";print_r($users->toArray());die;
+        $user = User::where('_id',Session::get('id'))->get();
+        $payment = Payments::where('fromId',Session::get('id'))->orderBy('createdAt','DESC')->get();
+        foreach($payment as $key => $pay){
+            $refer = User::where('_id',new \MongoDB\BSON\ObjectID($pay['toId']))->first();
+            // echo "<pre>";print_r($users);die();
+            // $payment[$key]['createdAt'] = Carbon::parse( $pay['createdAt'] )->toDayDateTimeString();
+            $payment[$key]['userName']=$refer['userName'];
         }
         // echo "<pre>";print_r($payment->toArray());die;
         return view('transaction',['data'=>$users,'payment'=>$payment,'user'=>$user]);

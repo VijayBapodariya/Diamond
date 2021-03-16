@@ -157,48 +157,56 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
+        
         $referral = "";
         $role = "";
-        if ($request->role == 1) {
-            $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
-            $role = "Admin";
-        } elseif ($request->role == 3) {
-            echo $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
-            $role = "superDistributer";
-        } elseif ($request->role == 5) {
-            $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
-            $role = "distributer";
-        } elseif ($request->role == 7) {
-            $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
-            $role = "retailer";
+        $refer = User::where('_id',new \MongoDB\BSON\ObjectID($user->referralId))->first();
+        if($refer['role']==Session::get('role')){
+            if ($request->role == 1) {
+                $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
+                $role = "Admin";
+            } elseif ($request->role == 3) {
+                echo $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
+                $role = "superDistributer";
+            } elseif ($request->role == 5) {
+                $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
+                $role = "distributer";
+            } elseif ($request->role == 7) {
+                $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
+                $role = "retailer";
+            }
+    
+            $permissions = [];
+            foreach ($request->permission as $key => $va) {
+                $v = $va;
+                $a = $key;
+                $permissions[$va] = true;
+            }
+    
+            $user = User::find($id);
+            // $user = new User();
+            $user->name = $request->name;
+            $user->password = $request->password;
+            $user->firmName = $request->firmName;
+            $user->role = $role;
+            $user->isActive = true;
+            $user->creditPoint = 0;
+            $user->permissions = $permissions;
+            $user->transactionPin = $request->transactionPin;
+            $user->commissionPercentage = $request->commissionPercentage;
+            $user->sharingPercentage = $request->sharingPercentage;
+            $user->isLogin = false;
+            $user->referralId = $referral;
+            // echo "<pre>";
+            // print_r($user->toArray());
+            // die();
+            $user->save();
+            return redirect('admin');
+        }else{
+            session()->flash('msg', 'You are not Authorized to edit this User.');
+            return redirect()->back();
         }
-
-        $permissions = [];
-        foreach ($request->permission as $key => $va) {
-            $v = $va;
-            $a = $key;
-            $permissions[$va] = true;
-        }
-
-        $user = User::find($id);
-        // $user = new User();
-        $user->name = $request->name;
-        $user->password = $request->password;
-        $user->firmName = $request->firmName;
-        $user->role = $role;
-        $user->isActive = true;
-        $user->creditPoint = 0;
-        $user->permissions = $permissions;
-        $user->transactionPin = $request->transactionPin;
-        $user->commissionPercentage = $request->commissionPercentage;
-        $user->sharingPercentage = $request->sharingPercentage;
-        $user->isLogin = false;
-        $user->referralId = $referral;
-        // echo "<pre>";
-        // print_r($user->toArray());
-        // die();
-        $user->save();
-        return redirect('admin');
+        
     }
 
     /**
