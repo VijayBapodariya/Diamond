@@ -277,7 +277,7 @@ class CommanController extends Controller
             $distributer = User::where('_id',new \MongoDB\BSON\ObjectID(Session::get('id')))->first();
             $retailer = User::where('referralId',new \MongoDB\BSON\ObjectID(Session::get('id')))->get();
             $retailers = [];
-            foreach($retailer as $re_user){
+            foreach($retailer as $re_user){ 
                 $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']); 
             }   
             $playPoints = Bets::whereIn('retailerId',$retailers)

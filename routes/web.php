@@ -24,7 +24,7 @@ Route::post('/login_custom','Auth\LoginController@Login_custom');
 
 Route::group(['middleware' => 'CheckAuth'],function () {
     Route::get('/logout', 'Auth\LoginController@logout');
-    Route::get('/dashboard', function () { return view('dashboard'); });
+    Route::get('/dashboard','DashboardController@index');
     
     Route::group(['middleware' => 'admin'],function () {
         Route::resources([
