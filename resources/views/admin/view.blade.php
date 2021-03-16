@@ -40,7 +40,7 @@
                 @if($value['role'] == 'Admin')
                   <tr role="row" class="odd">
                       <td class=""><?= $sl_no++; ?></td>
-                      <td><a href="{{ url('admin/detail/'.$value['_id']) }}">{{$value['userName']}}<i class="mdi mdi-eye"></i></a></td>
+                      <td><a href="{{ url('detail/'.$value['_id']) }}">{{$value['userName']}}<i class="mdi mdi-eye"></i></a></td>
                       <td>{{$value['name']}}</td>
                       <td>{{number_format($value['creditPoint'],2)}}</td>
                       <td>

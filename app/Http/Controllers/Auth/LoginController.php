@@ -110,10 +110,12 @@ class LoginController extends Controller
                         return redirect()->route('login');
                     }
                 }
-            } else {        
+            } else {    
+                Session::flush();    
                 return redirect()->route('login');
             }
         }else{
+            Session::flush();
             return redirect()->route('login');
         }
         

@@ -14,6 +14,14 @@
   </ol>
 </nav> --}}
 
+@if(Session::has('msg'))
+    <div class="alert alert-danger" role="alert">
+      {{ Session::has('msg') ? Session::get("msg") : '' }}
+    </div>
+@elseif(Session::has('success'))
+    <div class="alert alert-success" role="alert">{{Session::get("success")}}</div>
+@endif
+
 <div class="row">
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
@@ -37,10 +45,9 @@
                     $sl_no = 1;
                 @endphp
               @foreach($data as $value)
-              @if(Session::get('role')=="Admin")
                   <tr role="row" class="odd">
                       <td class=""><?= $sl_no++; ?></td>
-                      <td><a href="{{ url('super/detail/'.$value['_id']) }}">{{$value['userName']}}<i class="mdi mdi-eye"></i></a></td>
+                      <td><a href="{{ url('detail/'.$value['_id']) }}">{{$value['userName']}}<i class="mdi mdi-eye"></i></a></td>
                       <td>{{$value['name']}}</td>
                       <td class="sorting_1">
                           {{$value['refer']}}
@@ -48,7 +55,7 @@
                       <td>{{number_format($value['creditPoint'],2)}}</td>
                       <td>
                             <div class="btn-group">
-                                <a href="{{ url('users/edit/'.$value['_id'])}}" type="button" class="btn btn-outline-info" title="Edit user"><i class="mdi mdi-pencil-box" style="font-size:20px;"></i></a>
+                                <a href="{{ url('edit/'.$value['_id'])}}" type="button" class="btn btn-outline-info" title="Edit user"><i class="mdi mdi-pencil-box" style="font-size:20px;"></i></a>
                                 <a href="{{ url('transfercredit/'.$value['_id']) }}" class="btn btn-outline-success" title="Transfer Credit"><i class="mdi mdi-package-up" style="font-size:20px;"></i></a>
                                 <a href="{{ url('adjustcredit/'.$value['_id'])}}" class="btn btn-outline-warning" title="Adjust Credit"><i class="mdi mdi-package-down" style="font-size:20px;"></i></a>
                                 @if($value['isActive']==1)
@@ -63,7 +70,6 @@
                             {{-- href="{{ url('users/delete/'.$value['_id'])}}" --}}
                       </td> 
                   </tr>
-                @endif
               @endforeach
                 {{-- <tr role="row" class="odd">
                     <td class="">1306</td>

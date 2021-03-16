@@ -51,7 +51,7 @@ class CommanController extends Controller
         $playPoint = Bets::orderBy('createdAt','DESC')->get();
         foreach ($playPoint as $play){
             if(Session::get('role')=="Admin"){
-                    $playPoints = Bets::orderBy('createdAt','DESC')->get();
+                    $playPoints = Bets::orderBy('createdAt','DESC')->paginate(10);
                     return view('history', ['data' => $playPoints]);
             }elseif(Session::get('role')=="superDistributer"){
                 $distributer = User::where('referralId',new \MongoDB\BSON\ObjectID(Session::get('id')))->get();
@@ -61,7 +61,7 @@ class CommanController extends Controller
                     foreach($retailer as $re_user){
                         $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']); 
                     }   
-                    $playPoints = Bets::whereIn('retailerId',$retailers)->orderBy('createdAt','DESC')->get();
+                    $playPoints = Bets::whereIn('retailerId',$retailers)->orderBy('createdAt','DESC')->paginate(10);
                     return view('history', ['data' => $playPoints]);
                 }
             }elseif(Session::get('role')=="distributer"){
@@ -79,6 +79,12 @@ class CommanController extends Controller
                 }
             }
         }
+    }
+
+    public function playerHistory($id)
+    {
+        $playPoint = Bets::where('retailerId',new \MongoDB\BSON\ObjectID($id))->orderBy('createdAt','DESC')->paginate(10);
+        return view('history', ['data' => $playPoint]);
     }
 
     public function winhistory()

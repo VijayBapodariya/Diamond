@@ -7,9 +7,11 @@ use App\User;
 use App\Winnings;
 use App\WinnerIds;
 use App\Complaints;
+use App\Bets;
 use App\WinnerIdHistoris;
 use Illuminate\Http\Request;
 use Session;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -155,23 +157,19 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-        // echo "<pre>";
-        // print_r($request->toArray());
-        // die();
         $referral = "";
         $role = "";
         if ($request->role == 1) {
-            $referral = $request->referralId;
+            $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
             $role = "Admin";
         } elseif ($request->role == 3) {
-            $referral = $request->referralId;
+            echo $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
             $role = "superDistributer";
         } elseif ($request->role == 5) {
-            $referral = $request->referralId;
+            $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
             $role = "distributer";
         } elseif ($request->role == 7) {
-            $referral = $request->referralId;
+            $referral = new \MongoDB\BSON\ObjectID(Session::get('id'));
             $role = "retailer";
         }
 
@@ -189,13 +187,16 @@ class AdminController extends Controller
         $user->firmName = $request->firmName;
         $user->role = $role;
         $user->isActive = true;
-        $user->creditPoit = 0;
+        $user->creditPoint = 0;
         $user->permissions = $permissions;
         $user->transactionPin = $request->transactionPin;
         $user->commissionPercentage = $request->commissionPercentage;
         $user->sharingPercentage = $request->sharingPercentage;
         $user->isLogin = false;
         $user->referralId = $referral;
+        // echo "<pre>";
+        // print_r($user->toArray());
+        // die();
         $user->save();
         return redirect('admin');
     }
@@ -378,14 +379,23 @@ class AdminController extends Controller
         // echo "<pre>";
         // print_r($isActive);
         // die;
-        if ($isActive == 1) {
-            $is = 0;
-        } else {
-            $is = 1;
-        }
         $user = User::find($id);
-        $user->isActive = $is;
-        $user->save();
+        $refer = User::where('_id',new \MongoDB\BSON\ObjectID($user->referralId))->first();
+        if($refer['role'] == Session::get('role')){
+            // echo "vijay";
+            // die;
+            if ($isActive == 1) {
+                $is = 0;
+            } else {
+                $is = 1;
+            }
+            $user = User::find($id);
+            $user->isActive = $is;
+            $user->save();
+        }else{
+            session()->flash('msg', 'You are not Authorized to ban this User.');
+            return redirect()->back();
+        }
         return redirect()->back();
     }
 
@@ -479,16 +489,201 @@ class AdminController extends Controller
 
     public function detail($id)
     {
-        $user = User::where('_id', $id)
-            ->first();
-        $super = User::where('role', 'superDistributer')->get();
-        $data = array();
-        foreach ($super as $value) {
-            if ($id == $value['referralId']) {
-                $data[] = $value;
-            }
+        $user = User::where('_id', new \MongoDB\BSON\ObjectID($id))->first();
+
+        $LastStartPoint = 0;
+        $totalStartPoint = 0;
+        $LastTotalPlayPoint = 0;
+        $TotalPlayPoint = 0;
+        $LastTotalWinPoint = 0;
+        $TotalWinPoint = 0;
+        $LastTotalEndPoint = 0;
+        $TotalEndPoint=0;
+        $LastTotalRetailerCommission = 0;
+        $TotalRetailerCommission = 0;
+
+        $mon = strtotime("last monday");
+        $monday = date('W', $mon)==date('W') ? $mon-7*86400 : $mon;
+        $sunday = strtotime(date("Y-m-d",$monday)." +6 days");
+        $week_sd = date("Y-m-d",$monday);
+        $week_ed = date("Y-m-d",$sunday);
+
+        $fm = date('m',strtotime($week_sd));
+        $fd = date('d',strtotime($week_sd));
+        $fY = date('Y',strtotime($week_sd));
+        $tm = date('m',strtotime($week_ed));
+        $td = date('d',strtotime($week_ed));
+        $tY = date('Y',strtotime($week_ed));
+
+        $cfm = date('m',strtotime("monday"));
+        $cfd = date('d',strtotime("monday"));
+        $cfY = date('Y',strtotime("monday"));
+        $ctm = date('m');
+        $ctd = date('d');
+        $ctY = date('Y');
+
+        if($cfd == $ctd){
+            $cfd = date('d',strtotime("-1 day"));
         }
-        return view('admin.detail', ['user' => $data, 'data' => $user]);
+        if($user['role']=="Admin"){
+            $superdistributer = User::where('role','superDistributer')->where('referralId',new \MongoDB\BSON\ObjectID($user['_id']))->get();
+            foreach($superdistributer as $super){
+                $distributer = User::where('referralId',new \MongoDB\BSON\ObjectID($super['_id']))->get();
+                foreach($distributer as $dis_user){
+                    $retailer = User::where('referralId',new \MongoDB\BSON\ObjectID($dis_user['_id']))->get();
+                    $retailers = [];
+                    foreach($retailer as $re_user){
+                        $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']); 
+                    }
+                        $LastplayPoints = Bets::whereIn('retailerId',$retailers)
+                                        ->whereBetween(
+                                            'createdAt', array(
+                                                Carbon::createFromDate($fY, $fm, $fd),
+                                                Carbon::createFromDate($tY, $tm, $td)
+                                            )
+                                        )->orderBy('createdAt','DESC')->get();
+
+                        $playPoints = Bets::whereIn('retailerId',$retailers)
+                                        ->whereBetween(
+                                            'createdAt', array(
+                                                Carbon::createFromDate($cfY, $cfm, $cfd),
+                                                Carbon::createFromDate($ctY, $ctm, $ctd)
+                                            )
+                                        )->orderBy('createdAt','DESC')->get();
+                    // echo "<pre>";print_r($playPoints->toArray());die();
+                    foreach($LastplayPoints as $Lastplay){
+                        $LastStartPoint += $Lastplay['startPoint'];
+                        $LastTotalPlayPoint += $Lastplay['betPoint'];
+                        $LastTotalWinPoint += $Lastplay['won'];
+                        $LastTotalEndPoint = $LastStartPoint - $LastTotalPlayPoint + $LastTotalWinPoint;
+                        $LastTotalRetailerCommission += $Lastplay['retailerCommission'];
+                    }
+
+                    foreach($playPoints as $play){
+                        $totalStartPoint += $play['startPoint'];
+                        $TotalPlayPoint += $play['betPoint'];
+                        $TotalWinPoint += $play['won'];
+                        $TotalEndPoint = $totalStartPoint - $TotalPlayPoint + $TotalWinPoint;
+                        $TotalRetailerCommission += $play['retailerCommission'];
+                    }
+                    $total = [];
+                    $total['LastTotalPlayPoint'] = $LastTotalPlayPoint;
+                    $total['LastTotalWinPoint'] = $LastTotalWinPoint;
+                    $total['LastTotalEndPoint'] = $LastTotalEndPoint;
+                    $total['LastTotalRetailerCommission'] = $LastTotalRetailerCommission;
+
+                    $total['TotalPlayPoint'] = $TotalPlayPoint;
+                    $total['TotalWinPoint'] = $TotalWinPoint;
+                    $total['TotalEndPoint'] = $TotalEndPoint;
+                    $total['TotalRetailerCommission'] = $TotalRetailerCommission;
+                }
+            }
+            $refer = User::where('referralId',new \MongoDB\BSON\ObjectID($user['_id']))->where('role','superDistributer')->get();
+        }elseif($user['role']=="superDistributer"){
+                $distributer = User::where('role','distributer')->where('referralId',new \MongoDB\BSON\ObjectID($user['_id']))->get();
+                foreach($distributer as $dis_user){
+                    $retailer = User::where('referralId',new \MongoDB\BSON\ObjectID($dis_user['_id']))->get();
+                    $retailers = [];
+                    foreach($retailer as $re_user){
+                        $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']); 
+                    }
+                        $LastplayPoints = Bets::whereIn('retailerId',$retailers)
+                                        ->whereBetween(
+                                            'createdAt', array(
+                                                Carbon::createFromDate($fY, $fm, $fd),
+                                                Carbon::createFromDate($tY, $tm, $td)
+                                            )
+                                        )->orderBy('createdAt','DESC')->get();
+
+                        $playPoints = Bets::whereIn('retailerId',$retailers)
+                                        ->whereBetween(
+                                            'createdAt', array(
+                                                Carbon::createFromDate($cfY, $cfm, $cfd),
+                                                Carbon::createFromDate($ctY, $ctm, $ctd)
+                                            )
+                                        )->orderBy('createdAt','DESC')->get();
+                    // echo "<pre>";print_r($playPoints->toArray());die();
+                    foreach($LastplayPoints as $Lastplay){
+                        $LastStartPoint += $Lastplay['startPoint'];
+                        $LastTotalPlayPoint += $Lastplay['betPoint'];
+                        $LastTotalWinPoint += $Lastplay['won'];
+                        $LastTotalEndPoint = $LastStartPoint - $LastTotalPlayPoint + $LastTotalWinPoint;
+                        $LastTotalRetailerCommission += $Lastplay['retailerCommission'];
+                    }
+
+                    foreach($playPoints as $play){
+                        $totalStartPoint += $play['startPoint'];
+                        $TotalPlayPoint += $play['betPoint'];
+                        $TotalWinPoint += $play['won'];
+                        $TotalEndPoint = $totalStartPoint - $TotalPlayPoint + $TotalWinPoint;
+                        $TotalRetailerCommission += $play['retailerCommission'];
+                    }
+                    $total = [];
+                    $total['LastTotalPlayPoint'] = $LastTotalPlayPoint;
+                    $total['LastTotalWinPoint'] = $LastTotalWinPoint;
+                    $total['LastTotalEndPoint'] = $LastTotalEndPoint;
+                    $total['LastTotalRetailerCommission'] = $LastTotalRetailerCommission;
+
+                    $total['TotalPlayPoint'] = $TotalPlayPoint;
+                    $total['TotalWinPoint'] = $TotalWinPoint;
+                    $total['TotalEndPoint'] = $TotalEndPoint;
+                    $total['TotalRetailerCommission'] = $TotalRetailerCommission;
+                }
+            $refer = User::where('referralId',new \MongoDB\BSON\ObjectID($user['_id']))->where('role','distributer')->get();
+        }elseif($user['role']=="distributer"){
+                $retailer = User::where('referralId',new \MongoDB\BSON\ObjectID($user['_id']))->get();
+                    $retailers = [];
+                    foreach($retailer as $re_user){
+                        $retailers[] = new \MongoDB\BSON\ObjectID($re_user['_id']); 
+                    }
+                        $LastplayPoints = Bets::whereIn('retailerId',$retailers)
+                                        ->whereBetween(
+                                            'createdAt', array(
+                                                Carbon::createFromDate($fY, $fm, $fd),
+                                                Carbon::createFromDate($tY, $tm, $td)
+                                            )
+                                        )->orderBy('createdAt','DESC')->get();
+
+                        $playPoints = Bets::whereIn('retailerId',$retailers)
+                                        ->whereBetween(
+                                            'createdAt', array(
+                                                Carbon::createFromDate($cfY, $cfm, $cfd),
+                                                Carbon::createFromDate($ctY, $ctm, $ctd)
+                                            )
+                                        )->orderBy('createdAt','DESC')->get();
+                    // echo "<pre>";print_r($playPoints->toArray());die();
+                    foreach($LastplayPoints as $Lastplay){
+                        $LastStartPoint += $Lastplay['startPoint'];
+                        $LastTotalPlayPoint += $Lastplay['betPoint'];
+                        $LastTotalWinPoint += $Lastplay['won'];
+                        $LastTotalEndPoint = $LastStartPoint - $LastTotalPlayPoint + $LastTotalWinPoint;
+                        $LastTotalRetailerCommission += $Lastplay['retailerCommission'];
+                    }
+
+                    foreach($playPoints as $play){
+                        $totalStartPoint += $play['startPoint'];
+                        $TotalPlayPoint += $play['betPoint'];
+                        $TotalWinPoint += $play['won'];
+                        $TotalEndPoint = $totalStartPoint - $TotalPlayPoint + $TotalWinPoint;
+                        $TotalRetailerCommission += $play['retailerCommission'];
+                    }
+                    $total = [];
+                    $total['LastTotalPlayPoint'] = $LastTotalPlayPoint;
+                    $total['LastTotalWinPoint'] = $LastTotalWinPoint;
+                    $total['LastTotalEndPoint'] = $LastTotalEndPoint;
+                    $total['LastTotalRetailerCommission'] = $LastTotalRetailerCommission;
+
+                    $total['TotalPlayPoint'] = $TotalPlayPoint;
+                    $total['TotalWinPoint'] = $TotalWinPoint;
+                    $total['TotalEndPoint'] = $TotalEndPoint;
+                    $total['TotalRetailerCommission'] = $TotalRetailerCommission;
+            $refer = User::where('referralId',new \MongoDB\BSON\ObjectID($user['_id']))->where('role','retailer')->get();
+        }
+        $data = array();
+        foreach ($refer as $value){
+            $data[] = $value;
+        }
+        return view('admin.detail', ['user' => $data, 'data' => $user,'total'=>$total]);
     }
 
     public function transfercredit($id)
@@ -683,5 +878,4 @@ class AdminController extends Controller
         session()->flash('msg', 'reject creditpoint successfully....');
         return redirect()->back();
     }
-
 }

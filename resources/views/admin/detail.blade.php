@@ -14,7 +14,7 @@
         <div class="card">
           <div class="card-body bg-primary text-white">
             <div class="d-flex justify-content-between align-items-baseline">
-                <h6 class="card-title text-white mb-2">Admin Details</h6>
+                <h6 class="card-title text-white mb-2">{{$data['role']}} Details</h6>
             </div>
             <div class="row">
               <div class="col-6 col-md-12 col-xl-5">
@@ -72,22 +72,23 @@
               <div class="col-6 col-md-12 col-xl-5">
                 <div class="d-flex align-items-baseline">
                     <table class="table table-borderless">
+
                         <tbody class="text-white">
                           <tr>
                             <td style="padding:0;"><p>Total Played:</p></td>
-                            <td style="padding:0 0 0 10px;"><p>0</p></td> 
+                            <td style="padding:0 0 0 10px;"><p>{{number_format($total['LastTotalPlayPoint'],2)}}</p></td> 
                           </tr>
                           <tr>
                             <td style="padding:0;"><p>Total Won:</p></td>
-                            <td style="padding:0 0 0 10px;"><p>0</p></td> 
+                            <td style="padding:0 0 0 10px;"><p>{{number_format($total['LastTotalWinPoint'],2)}}</p></td> 
                           </tr>
                           <tr>
                             <td style="padding:0"><p>End Point:</p></td>
-                            <td style="padding:0 0 0 10px;"><p>0</p></td> 
+                            <td style="padding:0 0 0 10px;"><p>{{number_format($total['LastTotalEndPoint'],2)}}</p></td> 
                           </tr>
                           <tr>
                             <td style="padding:0"><p>Retailer Commisssion:</p></td>
-                            <td style="padding:0 0 0 10px;"><p>0</p></td> 
+                            <td style="padding:0 0 0 10px;"><p>{{number_format($total['LastTotalRetailerCommission'],2)}}</p></td> 
                           </tr>
                         </tbody>
                     </table>
@@ -113,19 +114,19 @@
                         <tbody class="text-white">
                           <tr>
                             <td style="padding:0;"><p>Total Played:</p></td>
-                            <td style="padding:0 0 0 10px;"><p>0</p></td> 
+                            <td style="padding:0 0 0 10px;"><p>{{number_format($total['TotalPlayPoint'],2)}}</p></td> 
                           </tr>
                           <tr>
                             <td style="padding:0;"><p>Total Won:</p></td>
-                            <td style="padding:0 0 0 10px;"><p>0</p></td> 
+                            <td style="padding:0 0 0 10px;"><p>{{number_format($total['TotalWinPoint'],2)}}</p></td> 
                           </tr>
                           <tr>
                             <td style="padding:0"><p>End Point:</p></td>
-                            <td style="padding:0 0 0 10px;"><p>0</p></td> 
+                            <td style="padding:0 0 0 10px;"><p>{{number_format($total['TotalEndPoint'],2)}}</p></td> 
                           </tr>
                           <tr>
                             <td style="padding:0"><p>Retailer Commisssion:</p></td>
-                            <td style="padding:0 0 0 10px;"><p>0</p></td> 
+                            <td style="padding:0 0 0 10px;"><p>{{number_format($total['TotalRetailerCommission'],2)}}</p></td> 
                           </tr>
                         </tbody>
                     </table>
@@ -147,9 +148,14 @@
       <div class="card">
         <div class="card-body">
           <h6 class="card-title">
-              superDistributers
+            @if($data['role'] == "Admin")
+              SuperDistributers
+            @elseif($data['role'] == "superDistributer")
+              Distributers
+            @elseif($data['role'] == "distributer")
+              Retailer
+            @endif
           </h6>
-          {{-- <p class="card-description">Read the <a href="https://datatables.net/" target="_blank"> Official DataTables Documentation </a>for a full list of instructions and other options.</p> --}}
           <div class="table-responsive">
             <table id="dataTableExample" class="table table-bordered">
               <thead>
@@ -157,7 +163,7 @@
                   <th>Id</th>
                   <th>Username</th>
                   <th>Name</th>
-                  <th>superDistributer</th>
+                  <th>Reffer</th>
                   <th>Revenue</th>
                   <th>Type</th>
                   <th>Credit</th>

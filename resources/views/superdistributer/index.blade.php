@@ -14,6 +14,14 @@
   </ol>
 </nav> --}}
 
+@if(Session::has('msg'))
+    <div class="alert alert-danger" role="alert">
+      {{ Session::has('msg') ? Session::get("msg") : '' }}
+    </div>
+@elseif(Session::has('success'))
+    <div class="alert alert-success" role="alert">{{Session::get("success")}}</div>
+@endif
+
 <div class="row">
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
@@ -40,7 +48,7 @@
               @if(Session::get('role')=="Admin")
                   <tr role="row" class="odd">
                       <td class=""><?= $sl_no++; ?></td>
-                      <td><a href="{{ url('super/detail/'.$value['_id']) }}">{{$value['userName']}}<i class="mdi mdi-eye"></i></a></td>
+                      <td><a href="{{ url('detail/'.$value['_id']) }}">{{$value['userName']}}<i class="mdi mdi-eye"></i></a></td>
                       <td>{{$value['name']}}</td>
                       <td class="sorting_1">
                             {{$value['refer']}}

@@ -24,12 +24,13 @@
                       $sunday = strtotime(date("Y-m-d",$monday)." +6 days");
                       $week_sd = date("Y-m-d",$monday);
                       $week_ed = date("Y-m-d",$sunday);
+                      // die();
                     @endphp
                     <a href="{{url('Tnover/1/'.date("Y-m-d", strtotime("-6 month")).'/'.date('Y-m-d'))}}" class="btn btn-outline-info">Last 6 Months</a>
                     <a href="{{url('Tnover/2/'.date("Y-m-01").'/'.date('Y-m-t'))}}" class="btn btn-outline-info">Current Month</a>
                     <a href="{{url('Tnover/3/'.date("Y-m-d", strtotime("first day of last month")).'/'.date("Y-m-d", strtotime("last day of last month")))}}" class="btn btn-outline-info">Last Month</a>
                     <a href="{{url('Tnover/4/'.$week_sd.'/'.$week_ed)}}" class="btn btn-outline-info">Last Week</a>
-                    <a href="{{url('Tnover/5/'.date("Y-m-d", $mon).'/'.date('Y-m-d', strtotime('+'.(7-date('w')).' days')))}}" class="btn btn-outline-info">Current Week</a>
+                    <a href="{{url('Tnover/5/'.date("Y-m-d", strtotime("monday")).'/'.date('Y-m-d', strtotime('+'.(7-date('w')).' days')))}}" class="btn btn-outline-info">Current Week</a>
                     <a href="{{url('Tnover/6/'.date("Y-m-d", strtotime("-1 day")).'/'.date("Y-m-d", strtotime("-1 day")))}}" class="btn btn-outline-info">Yesterday</a>
                     <a href="{{url('Tnover/7/'.date('Y-m-d').'/'.date('Y-m-d'))}}" class="btn btn-outline-info">Today</a>
                 </div>

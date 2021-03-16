@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
+use Session;
 
 class DistributerController extends Controller
 {
@@ -25,15 +26,23 @@ class DistributerController extends Controller
         // $distributer = User::where('isLogin',false)->get();
         // // echo "<pre>";print_r($distributer->toArray());
         // echo "<pre>";print_r($distributers->toArray());die;
-        
-        $user = User::where('role', 'distributer')->orderBy('createdAt','DESC')
-            ->get();
-        foreach ($user as $key => $value){
-            $refer = User::where('_id',new \MongoDB\BSON\ObjectID($value['referralId']))->first();
-            $user[$key]['refer']=$refer->userName;
+        if(Session::get('role')=="Admin"){
+            $user = User::where('role', 'distributer')->orderBy('createdAt','DESC')->get();
+            foreach ($user as $key => $value){
+                $refer = User::where('_id',new \MongoDB\BSON\ObjectID($value['referralId']))->first();
+                $user[$key]['refer']=$refer->userName;
+            }
+        }elseif(Session::get('role')=="superDistributer"){
+            $user = User::where('referralId',new \MongoDB\BSON\ObjectID(Session::get('id')))->where('role', 'distributer')->orderBy('createdAt','DESC')->get();
+            // echo "<pre>";print_r($user->toArray());die;
+            foreach ($user as $key => $value){
+                $refer = User::where('_id',new \MongoDB\BSON\ObjectID($value['referralId']))->first();
+                
+                $user[$key]['refer']=$refer->userName;  
+            }
         }
-        
-        return view('superdistributer.index',['data' => $user]);
+        // echo "<pre>";print_r($user->toArray());die;
+        return view('distributer.index',['data' => $user]);
     }
 
     /**

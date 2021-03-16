@@ -32,11 +32,11 @@ Route::group(['middleware' => 'CheckAuth'],function () {
         ]);
         Route::get('/detail/{id}','AdminController@detail');
         Route::get('/admin/delete/{id}','AdminController@destroy');
-        Route::get('/superdistributer','SuperDistributerController@index');
         Route::get('super/edit/{id}','AdminController@edit');
-        Route::get('/distributer','DistributerController@index');
+        Route::get('super/detail/{id}','AdminController@detail');
+        Route::get('/superdistributer','SuperDistributerController@index');
         Route::get('/retailer','ReatilerController@index');
-        Route::get('/admin/detail/{id}','AdminController@detail');
+        Route::get('/detail/{id}','AdminController@detail');
             Route::post('/get_data','AdminController@get_data');
             Route::post('/get_distributer','AdminController@get_distributer');
         Route::get('admin/delete/{id}','AdminController@destroy');
@@ -56,21 +56,13 @@ Route::group(['middleware' => 'CheckAuth'],function () {
         Route::get('complaint/delete/{id}','AdminController@complaintDelete');
     });
 
-    Route::group(['middleware' => 'superdistributer'],function(){
-        // Route::resources([
-        //     'superdistributer' => 'superdistributerController',  
-        // ]);
-    });
 
-    Route::group(['middleware' => 'distributer'],function(){
-        // Route::resources([
-        //     'distributer' => 'DistributerController',  
-        // ]);
-    });
+    Route::get('/detail/{id}','AdminController@detail');
 
-    Route::group(['middleware' => 'retailer'],function(){
-        // Route::get('/retailers','ReatilerController@index');
-    });
+    Route::get('/distributer','DistributerController@index');
+    Route::get('/retailer','ReatilerController@index');
+
+    Route::get('player/detail/{id}','CommanController@playerHistory');
 
     Route::get('/OnPlayers','CommanController@OnPlayers');
     Route::get('/blockedPlayers','CommanController@blockedPlayers');

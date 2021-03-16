@@ -16,16 +16,10 @@ class Distributer
      */
     public function handle($request, Closure $next)
     {
-        if(Session::has('username') && Session::get('role')=="Admin"){
-            return redirect('/admin');
-        }elseif(Session::has('username') && Session::get('role')=="superdistributer"){
-            return redirect('/superdistributer');
-        }elseif(Session::has('username') && Session::get('role')=="distributer"){
+        if(Session::has('username') && Session::get('role')=="distributer"){
             return $next($request);
-        }elseif(Session::has('username') && Session::get('role')=="retailer"){
-            return redirect('/retailer');
         }else{
-            return redirect('/login');
+            return redirect()->route('login');
         }
     }
 }
