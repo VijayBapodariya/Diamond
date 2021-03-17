@@ -23,13 +23,13 @@
                   <div class="forms-sample">
                       <div class="form-group row">
                           <div class="col-sm-4">
-                              <div class="input-group date datepicker" id="datePickerExample">
+                              <div class="input-group date datepicker" id="datePickerExample1">
                                   <input type="text" class="form-control" name="from" placeholder="From"><span class="input-group-addon"><i data-feather="calendar"></i></span>
                               </div>
                           </div>
                           <div class="col-sm-1 text-center mt-2">To</div>
                           <div class="col-sm-4">
-                              <div class="input-group date datepicker" id="datePickerExample1">
+                              <div class="input-group date datepicker" id="datePickerExample">
                                   <input type="text" class="form-control" name="to" placeholder="To"><span class="input-group-addon"><i data-feather="calendar"></i></span>
                               </div>
                           </div>
@@ -95,7 +95,7 @@
                 @endforeach
               </tbody>  
             </table>
-            <div class="mt-3">{{$win->links()}}<div>
+            <div class="mt-3">{{$win->links()}}</div>
         </div>
       </div>
     </div>

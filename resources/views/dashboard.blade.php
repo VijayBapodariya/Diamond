@@ -70,7 +70,7 @@
       @endif
       @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin")
       <div class="col-lg-3 col-md-4 col-sm-4 grid-margin stretch-card">
-        <div class="card bg-success">
+        <div class="card bg-primary">
           <a href="{{url('/distributer')}}">
             <div class="card-body">
               <div class=" row">
@@ -89,6 +89,7 @@
         </div>
       </div>
       @endif
+      @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin" || Session::get('role')=="distributer")
       <div class="col-lg-3 col-md-4 col-sm-4 grid-margin stretch-card">
         <div class="card bg-info">
           <a href="{{url('/retailer')}}">
@@ -108,19 +109,202 @@
           </>
         </div>
       </div>
+      @endif
+      @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin" || Session::get('role')=="distributer")
       <div class="col-md-3 col-sm-4 grid-margin stretch-card">
         <div class="card bg-danger">
-          <a href="{{url('/money/cancel')}}">
+          <a href="{{url('/OnPlayers')}}">
             <div class="card-body">
               <div class=" row">
                 <div class="col-md-8">
-                  <h5 class="text-white mb-2">Money Reqeust Cancel</h5>
+                  <h5 class="text-white mb-2">Show On Players</h5>
                   <div>
-                    <h3 class="text-white"><i class="fa fa-inr mr-2"></i></h3>
+                    <h3 class="text-white">{{$data['ShowOnplayer']}}</h3>
                   </div>
                 </div>
                 <div class="col-md-4 mt-1">
-                    <h1 class="text-white text-right mr-3"><i class="fa fa-window-close"></i></h2>
+                    <h1 class="text-white text-right mr-3"><i class="fa fa-user-plus"></i></h2>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      @endif
+      @if(Session::get('role')=="Admin")
+      <div class="col-md-3 grid-margin stretch-card">
+        <div class="card bg-primary">
+          <a href="{{url('/admin')}}">
+            <div class="card-body">
+              <div class=" row">
+                <div class="col-md-8">
+                  <h5 class="text-white mb-2">Admin Commission</h5>
+                  <div>
+                    <h3 class="text-white"><i class="fa fa-inr mr-2"></i>{{number_format($total['TotalAdminCommission'],2)}}</h3>
+                  </div>
+                </div>
+                <div class="col-md-4 mt-1">
+                    <h1 class="text-white text-right mr-3"><i class="fa fa-money"></i></h2>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-3 grid-margin stretch-card">
+        <div class="card bg-success">
+          <a href="{{url('/superdistributer')}}">
+            <div class="card-body">
+              <div class=" row">
+                <div class="col-md-8">
+                  <h5 class="text-white mb-2">SuperDistributer Commission</h5>
+                  <div>
+                    <h3 class="text-white"><i class="fa fa-inr mr-2"></i>{{number_format($total['TotalSuperDistributerCommission'],2)}}</h3>
+                  </div>
+                </div>
+                <div class="col-md-4 mt-1">
+                    <h1 class="text-white text-right mr-3"><i class="fa fa-money"></i></h2>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      @endif
+      @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin")
+      <div class="col-md-3 grid-margin stretch-card">
+        <div class="card bg-primary">
+          <a href="{{url('/distributer')}}">
+            <div class="card-body">
+              <div class=" row">
+                <div class="col-md-8">
+                  <h5 class="text-white mb-2">Distributer Commission</h5>
+                  <div>
+                    <h3 class="text-white"><i class="fa fa-inr mr-2"></i>{{number_format($total['TotalDistributerCommission'],2)}}</h3>
+                  </div>
+                </div>
+                <div class="col-md-4 mt-1">
+                    <h1 class="text-white text-right mr-3"><i class="fa fa-money"></i></h2>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      @endif
+      @if(Session::get('role')=="superDistributer" || Session::get('role')=="Admin" || Session::get('role')=="distributer")
+      <div class="col-md-3 grid-margin stretch-card">
+        <div class="card bg-primary">
+          <a href="{{url('/retailer')}}">
+            <div class="card-body">
+              <div class=" row">
+                <div class="col-md-8">
+                  <h5 class="text-white mb-2">Retailer Commission</h5>
+                  <div>
+                    <h3 class="text-white"><i class="fa fa-inr mr-2"></i>{{number_format($total['TotalRetailerCommission'],2)}}</h3>
+                  </div>
+                </div>
+                <div class="col-md-4 mt-1">
+                    <h1 class="text-white text-right mr-3"><i class="fa fa-money"></i></h2>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      @endif
+      <div class="col-md-3 grid-margin stretch-card">
+        <div class="card bg-danger">
+          <a href="{{url('/blockedPlayers')}}">
+            <div class="card-body">
+              <div class=" row">
+                <div class="col-md-8">
+                  <h5 class="text-white mb-2">Block Users</h5>
+                </div>
+                <div class="col-md-4 mt-1">
+                    <h1 class="text-white text-right mr-3"><i class="fa fa-user-times"></i></h2>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-3 grid-margin stretch-card">
+        <div class="card bg-secondary">
+          <a href="{{url('/transfer')}}">
+            <div class="card-body">
+              <div class=" row">
+                <div class="col-md-8">
+                  <h5 class="text-white mb-2">Transfer Point</h5>
+                </div>
+                <div class="col-md-4 mt-1">
+                    <h1 class="text-white text-right mr-3"><i class="fa fa-exchange"></i></h2>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-3 grid-margin stretch-card">
+        <div class="card bg-warning">
+          <a href="{{url('/history')}}">
+            <div class="card-body">
+              <div class=" row">
+                <div class="col-md-8">
+                  <h5 class="text-white mb-2">Player History</h5>
+                </div>
+                <div class="col-md-4 mt-1">
+                    <h1 class="text-white text-right mr-3"><i class="fa fa-dashboard"></i></h2>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      @if(Session::get('role')=="Admin")
+      <div class="col-md-3 grid-margin stretch-card">
+        <div class="card bg-info">
+          <a href="{{url('/winhistory')}}">
+            <div class="card-body">
+              <div class=" row">
+                <div class="col-md-8">
+                  <h5 class="text-white mb-2">Win Result History</h5>
+                </div>
+                <div class="col-md-4 mt-1">
+                    <h1 class="text-white text-right mr-3"><i class="fa fa-history"></i></h2>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      @endif
+      <div class="col-md-3 grid-margin stretch-card">
+        <div class="card bg-success">
+          <a href="{{url('/Tnover/7/'.date('Y-m-d').'/'.date('Y-m-d'))}}">
+            <div class="card-body">
+              <div class=" row">
+                <div class="col-md-8">
+                  <h5 class="text-white mb-2">TurnOver Result</h5>
+                </div>
+                <div class="col-md-4 mt-1">
+                    <h1 class="text-white text-right mr-3"><i class="fa fa-pie-chart"></i></h2>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-3 grid-margin stretch-card">
+        <div class="card bg-danger">
+          <a href="{{url('/transactions')}}">
+            <div class="card-body">
+              <div class=" row">
+                <div class="col-md-8">
+                  <h5 class="text-white mb-2">Transaction Report</h5>
+                </div>
+                <div class="col-md-4 mt-1">
+                    <h1 class="text-white text-right mr-3"><i class="fa fa-bar-chart"></i></h2>
                 </div>
               </div>
             </div>
@@ -129,14 +313,11 @@
       </div>
       <div class="col-md-3 grid-margin stretch-card">
         <div class="card bg-primary">
-          <a href="{{url('/money/cancel')}}">
+          <a href="{{url('/cmbreport')}}">
             <div class="card-body">
               <div class=" row">
                 <div class="col-md-8">
-                  <h5 class="text-white mb-2">Admin Commission</h5>
-                  <div>
-                    <h3 class="text-white"><i class="fa fa-inr mr-2"></i></h3>
-                  </div>
+                  <h5 class="text-white mb-2">Commission Payout Report</h5>
                 </div>
                 <div class="col-md-4 mt-1">
                     <h1 class="text-white text-right mr-3"><i class="fa fa-money"></i></h2>

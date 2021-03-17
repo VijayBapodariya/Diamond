@@ -17,9 +17,12 @@ class CommanController extends Controller
     public function OnPlayers()
     {
         $user = User::where('role','retailer')->where('isLogin',true)->get();
+        // echo "<pre>";
+        // print_r($user->toArray());
+        // die();
         $users = User::all();
         foreach($users as $value){
-            $playPoint = Bets::all();
+            $playPoint = Bets::where('retailerId',new \MongoDB\BSON\ObjectID($value['_id']));
             foreach($playPoint as $play){
                 if($value['_id']==$play['retailerId']){
                     $betPoint = 0;
@@ -142,7 +145,7 @@ class CommanController extends Controller
                                         Carbon::createFromDate($tY, $tm, $td)
                                     )
                                 )->paginate(10);
-        // echo "<pre>";print_r($win->toArray());die;
+        // echo "<pre>";print_r($win->toArray());die;   
         return view('winhistory',['win'=>$win]);
     }
 

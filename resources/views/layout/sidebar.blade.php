@@ -1,6 +1,6 @@
 <nav class="sidebar">
   <div class="sidebar-header">
-    <a href="#" class="sidebar-brand" style="font-size:20px">
+    <a href="{{url('/dashboard')}}" class="sidebar-brand" style="font-size:20px">
       Diamond<span> Coupon</span>
     </a>
     <div class="sidebar-toggler not-active">
